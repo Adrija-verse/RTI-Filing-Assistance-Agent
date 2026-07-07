@@ -1,0 +1,10 @@
+flask==3.0.3
+flask-cors==4.0.1
+python-dotenv==1.0.1
+ibm-watsonx-ai==1.5.14
+sentence-transformers==3.4.1
+faiss-cpu==1.9.0.post1
+numpy>=1.26,<3
+pandas>=2.2,<3
+python-dateutil==2.9.0
+gunicorn==22.0.0

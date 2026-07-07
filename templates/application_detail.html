@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Application #{{ app.id }} — RTI Sahayak</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    :root { --brand:#f4801a; --surface:#1a1d23; --surface2:#22262f; --border:#2e3340; --text-muted:#8b93a5; }
+    body { background:#13161c; color:#d4d8e2; font-family:'Segoe UI',system-ui,sans-serif; }
+    .navbar { background:var(--surface) !important; border-bottom:1px solid var(--border); }
+    .navbar-brand { font-weight:700; color:var(--brand) !important; }
+    .nav-link { color:#a0aabb !important; }
+    .nav-link:hover { color:var(--brand) !important; }
+    .info-card { background:var(--surface2); border:1px solid var(--border); border-radius:12px; }
+    .info-label { font-size:.72rem; text-transform:uppercase; letter-spacing:.5px; color:var(--text-muted); margin-bottom:.15rem; }
+    .info-value { font-size:.9rem; font-weight:500; }
+    .draft-box {
+      background:#13161c; color:#d4d8e2; border:1px solid var(--border);
+      border-radius:8px; padding:1.25rem; font-size:.8rem; line-height:1.7;
+      white-space:pre-wrap; max-height:65vh; overflow-y:auto;
+      font-family:'Courier New',monospace;
+    }
+    .badge-on-track { background:rgba(25,135,84,.25);color:#2ecc71;border:1px solid rgba(25,135,84,.4); }
+    .badge-due-soon  { background:rgba(253,126,20,.2);color:#fd7e14;border:1px solid rgba(253,126,20,.4); }
+    .badge-overdue   { background:rgba(220,53,69,.2);color:#ff6b7a;border:1px solid rgba(220,53,69,.4); }
+    .status-badge { font-size:.75rem; font-weight:600; padding:.3rem .7rem; border-radius:20px; }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid px-3">
+    <a class="navbar-brand" href="/"><i class="bi bi-scale me-2"></i>RTI Sahayak</a>
+    <div class="ms-auto">
+      <a class="nav-link d-inline" href="/dashboard"><i class="bi bi-arrow-left me-1"></i>Back to Dashboard</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container py-4" style="max-width:860px;">
+
+  <!-- Header -->
+  <div class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-4">
+    <div>
+      <h5 class="fw-bold mb-1">Application #{{ app.id }}</h5>
+      <p class="text-muted mb-0" style="font-size:.85rem;">{{ app.subject }}</p>
+    </div>
+    <div class="d-flex gap-2">
+      {% if app.status == 'overdue' %}
+        <span class="status-badge badge-overdue">🔴 Overdue</span>
+      {% elif app.status == 'due_soon' %}
+        <span class="status-badge badge-due-soon">🟡 Due Soon</span>
+      {% else %}
+        <span class="status-badge badge-on-track">🟢 On Track</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Info grid -->
+  <div class="info-card p-3 mb-3">
+    <div class="row g-3">
+      <div class="col-6 col-md-3">
+        <div class="info-label">Department</div>
+        <div class="info-value">{{ app.department }}</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="info-label">Date Filed</div>
+        <div class="info-value">{{ app.date_filed }}</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="info-label">Deadline</div>
+        <div class="info-value">{{ app.deadline }}</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="info-label">Days Remaining</div>
+        <div class="info-value
+          {% if app.days_remaining < 0 %}text-danger
+          {% elif app.days_remaining <= 5 %}text-warning
+          {% else %}text-success{% endif %}">
+          {% if app.days_remaining < 0 %}
+            {{ app.days_remaining|abs }} days overdue
+          {% else %}
+            {{ app.days_remaining }} days
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="info-label">Applicant</div>
+        <div class="info-value">{{ app.applicant_name or '—' }}</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="info-label">Contact</div>
+        <div class="info-value">{{ app.applicant_contact or '—' }}</div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="info-label">PIO Address</div>
+        <div class="info-value" style="font-size:.82rem;">{{ app.pio_address or '—' }}</div>
+      </div>
+      {% if app.ref_number %}
+      <div class="col-6 col-md-3">
+        <div class="info-label">Reference No.</div>
+        <div class="info-value">{{ app.ref_number }}</div>
+      </div>
+      {% endif %}
+      {% if app.life_liberty %}
+      <div class="col-12">
+        <span class="badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-25">
+          ⚡ Life / Liberty matter — 48-hour statutory deadline applied
+        </span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Draft text -->
+  {% if app.draft_text %}
+  <div class="info-card p-3 mb-3">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+      <span class="fw-semibold" style="font-size:.9rem;"><i class="bi bi-file-earmark-text me-2 text-warning"></i>Application Draft</span>
+      <div class="d-flex gap-2">
+        <button class="btn btn-sm btn-outline-secondary" onclick="copyDraft()">
+          <i class="bi bi-clipboard me-1"></i>Copy
+        </button>
+        <button class="btn btn-sm btn-outline-secondary" onclick="printDraft()">
+          <i class="bi bi-printer me-1"></i>Print
+        </button>
+      </div>
+    </div>
+    <pre class="draft-box" id="draft-text">{{ app.draft_text }}</pre>
+  </div>
+  {% endif %}
+
+  <!-- First Appeal section (shown if overdue) -->
+  {% if app.status == 'overdue' %}
+  <div class="info-card p-3 mb-3 border-danger border-opacity-50">
+    <h6 class="text-danger mb-3"><i class="bi bi-megaphone-fill me-2"></i>First Appeal (Section 19 — RTI Act, 2005)</h6>
+    <p class="text-muted small mb-3">
+      The statutory deadline has passed. You are entitled to file a First Appeal.
+      Fill in any missing details and click <strong>Generate First Appeal</strong>.
+    </p>
+    <div class="row g-2 mb-3">
+      <div class="col-md-4">
+        <label class="form-label small text-muted">Applicant Name</label>
+        <input type="text" id="fa-name" class="form-control form-control-sm bg-dark border-secondary text-light"
+               value="{{ app.applicant_name }}" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label small text-muted">Applicant Contact</label>
+        <input type="text" id="fa-contact" class="form-control form-control-sm bg-dark border-secondary text-light"
+               value="{{ app.applicant_contact }}" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label small text-muted">Appellate Authority Address</label>
+        <input type="text" id="fa-faa" class="form-control form-control-sm bg-dark border-secondary text-light"
+               placeholder="Officer senior in rank to PIO" />
+      </div>
+      <div class="col-12">
+        <label class="form-label small text-muted">Applicant Address</label>
+        <input type="text" id="fa-addr" class="form-control form-control-sm bg-dark border-secondary text-light"
+               value="{{ app.applicant_address }}" />
+      </div>
+    </div>
+    <button class="btn btn-sm btn-danger" onclick="generateAppeal()">
+      <i class="bi bi-lightning-fill me-1"></i>Generate First Appeal
+    </button>
+    <div id="appeal-area" class="mt-3" style="display:none;">
+      <div class="d-flex justify-content-end gap-2 mb-2">
+        <button class="btn btn-sm btn-outline-secondary" onclick="copyAppeal()">
+          <i class="bi bi-clipboard me-1"></i>Copy Appeal
+        </button>
+        <button class="btn btn-sm btn-outline-secondary" onclick="printAppeal()">
+          <i class="bi bi-printer me-1"></i>Print
+        </button>
+      </div>
+      <pre class="draft-box" id="appeal-text"></pre>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Delete -->
+  <div class="d-flex justify-content-end">
+    <form method="POST" action="/application/{{ app.id }}/delete"
+          onsubmit="return confirm('Permanently delete this application?')">
+      <button type="submit" class="btn btn-sm btn-outline-danger">
+        <i class="bi bi-trash3 me-1"></i>Delete Application
+      </button>
+    </form>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function copyDraft() {
+  navigator.clipboard.writeText(document.getElementById('draft-text').textContent)
+    .then(() => alert('Draft copied to clipboard!'));
+}
+function printDraft() {
+  const w = window.open('','_blank');
+  w.document.write('<pre style="font-family:monospace;padding:20px;">' +
+    document.getElementById('draft-text').textContent + '</pre>');
+  w.print();
+}
+function copyAppeal() {
+  navigator.clipboard.writeText(document.getElementById('appeal-text').textContent)
+    .then(() => alert('Appeal copied to clipboard!'));
+}
+function printAppeal() {
+  const w = window.open('','_blank');
+  w.document.write('<pre style="font-family:monospace;padding:20px;">' +
+    document.getElementById('appeal-text').textContent + '</pre>');
+  w.print();
+}
+
+async function generateAppeal() {
+  const payload = {
+    applicant_name:               document.getElementById('fa-name').value,
+    applicant_address:            document.getElementById('fa-addr').value,
+    applicant_contact:            document.getElementById('fa-contact').value,
+    department:                   '{{ app.department }}',
+    original_application_subject: '{{ app.subject|replace("'","") }}',
+    original_application_date:    '{{ app.date_filed }}',
+    pio_address:                  '{{ app.pio_address|replace("'","") }}',
+    appellate_officer_address:    document.getElementById('fa-faa').value || undefined,
+  };
+
+  const btn = document.querySelector('button[onclick="generateAppeal()"]');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Generating…';
+
+  try {
+    const res = await fetch('/api/draft/appeal', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.error) { alert('Error: ' + data.error); }
+    else {
+      document.getElementById('appeal-text').textContent = data.draft;
+      document.getElementById('appeal-area').style.display = 'block';
+    }
+  } catch(e) { alert('Network error.'); }
+  finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bi bi-lightning-fill me-1"></i>Generate First Appeal';
+  }
+}
+</script>
+</body>
+</html>

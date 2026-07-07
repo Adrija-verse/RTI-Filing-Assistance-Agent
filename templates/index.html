@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RTI Sahayak — RTI Filing Assistant</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    :root {
+      --brand: #f4801a;
+      --brand-dim: #c15c00;
+      --surface: #1a1d23;
+      --surface2: #22262f;
+      --border: #2e3340;
+      --text-muted: #8b93a5;
+      --user-bubble: #1e3a5f;
+      --bot-bubble: #22262f;
+      --badge-green: #198754;
+      --badge-amber: #fd7e14;
+      --badge-red: #dc3545;
+    }
+    body { background: #13161c; color: #d4d8e2; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+    /* ── Navbar ── */
+    .navbar { background: var(--surface) !important; border-bottom: 1px solid var(--border); }
+    .navbar-brand { font-weight: 700; color: var(--brand) !important; letter-spacing: .5px; }
+    .nav-link { color: #a0aabb !important; }
+    .nav-link:hover, .nav-link.active { color: var(--brand) !important; }
+
+    /* ── Layout ── */
+    .main-wrapper { display: flex; height: calc(100vh - 58px); overflow: hidden; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 280px; min-width: 280px; background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: .5rem;
+    }
+    .sidebar-section { border-top: 1px solid var(--border); padding-top: .75rem; margin-top: .25rem; }
+    .sidebar h6 { color: var(--text-muted); font-size: .7rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: .5rem; }
+    .quick-btn {
+      width: 100%; text-align: left; background: var(--surface2);
+      border: 1px solid var(--border); border-radius: 8px;
+      color: #c8d0e0; padding: .45rem .75rem; font-size: .85rem;
+      cursor: pointer; transition: background .15s, border-color .15s;
+    }
+    .quick-btn:hover { background: #2a2f3a; border-color: var(--brand); color: #fff; }
+
+    /* ── Deadline panel ── */
+    #deadline-result { font-size: .82rem; }
+    .deadline-ok   { color: #20c997; }
+    .deadline-warn { color: var(--badge-amber); }
+    .deadline-over { color: var(--badge-red); }
+
+    /* ── Chat pane ── */
+    .chat-pane { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .chat-header {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: .75rem 1.25rem; display: flex; align-items: center; gap: .75rem;
+    }
+    .chat-header .avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, #f4801a, #e03c1a);
+      display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+    }
+    .chat-header h5 { margin: 0; font-size: .95rem; font-weight: 600; }
+    .chat-header small { color: var(--text-muted); font-size: .75rem; }
+
+    #chat-messages {
+      flex: 1; overflow-y: auto; padding: 1.25rem;
+      display: flex; flex-direction: column; gap: .9rem;
+      scroll-behavior: smooth;
+    }
+    .msg-row { display: flex; align-items: flex-end; gap: .6rem; animation: fadeUp .25s ease; }
+    .msg-row.user { flex-direction: row-reverse; }
+    @keyframes fadeUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+
+    .bubble {
+      max-width: 72%; padding: .65rem 1rem; border-radius: 14px;
+      font-size: .875rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word;
+    }
+    .bubble.bot  { background: var(--bot-bubble); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+    .bubble.user { background: var(--user-bubble); border: 1px solid #1e4a7a; border-bottom-right-radius: 4px; }
+
+    .msg-avatar {
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: .85rem;
+    }
+    .msg-avatar.bot  { background: linear-gradient(135deg,#f4801a,#e03c1a); }
+    .msg-avatar.user { background: #1e3a5f; border: 1px solid #1e4a7a; }
+
+    /* typing indicator */
+    .typing-dots span {
+      display: inline-block; width: 7px; height: 7px; background: var(--text-muted);
+      border-radius: 50%; margin: 0 2px;
+      animation: dot-bounce 1.2s infinite ease-in-out;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: .2s; }
+    .typing-dots span:nth-child(3) { animation-delay: .4s; }
+    @keyframes dot-bounce {
+      0%,80%,100% { transform: scale(0.7); opacity:.4; }
+      40%          { transform: scale(1);   opacity:1; }
+    }
+
+    /* draft modal pre */
+    #draft-content {
+      background: #13161c; color: #d4d8e2; border: 1px solid var(--border);
+      padding: 1rem; border-radius: 8px; font-size: .78rem;
+      max-height: 60vh; overflow-y: auto; white-space: pre-wrap;
+    }
+
+    /* Input bar */
+    .chat-input-bar {
+      background: var(--surface); border-top: 1px solid var(--border);
+      padding: .75rem 1.25rem; display: flex; gap: .6rem; align-items: center;
+    }
+    #chat-input {
+      flex: 1; background: var(--surface2); border: 1px solid var(--border);
+      color: #d4d8e2; border-radius: 22px; padding: .5rem 1rem;
+      font-size: .875rem; resize: none; outline: none;
+      transition: border-color .15s;
+    }
+    #chat-input:focus { border-color: var(--brand); }
+    #send-btn {
+      background: var(--brand); border: none; border-radius: 50%;
+      width: 40px; height: 40px; color: #fff; font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s, transform .1s; flex-shrink: 0;
+    }
+    #send-btn:hover { background: var(--brand-dim); transform: scale(1.05); }
+
+    /* ── Error banner ── */
+    #error-banner { display:none; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+    }
+    @media (max-width: 576px) {
+      .bubble { max-width: 90%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid px-3">
+    <a class="navbar-brand" href="/"><i class="bi bi-scale me-2"></i>RTI Sahayak</a>
+    <button class="navbar-toggler border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto gap-1">
+        <li class="nav-item"><a class="nav-link active" href="/"><i class="bi bi-chat-dots me-1"></i>Chat</a></li>
+        <li class="nav-item"><a class="nav-link" href="/dashboard"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Error banner -->
+<div id="error-banner" class="alert alert-danger alert-dismissible m-2 mb-0 py-2 px-3 rounded-3" role="alert">
+  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+  <span id="error-text"></span>
+  <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('error-banner').style.display='none'"></button>
+</div>
+
+<div class="main-wrapper">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+
+    <!-- Quick Actions -->
+    <div>
+      <h6>Quick Actions</h6>
+      <div class="d-flex flex-column gap-2">
+        <button class="quick-btn" onclick="quickPrompt('I want to file an RTI application. My pension has been pending for 6 months. Please help me draft one.')">
+          <i class="bi bi-file-earmark-text me-2 text-warning"></i>Draft RTI Application
+        </button>
+        <button class="quick-btn" onclick="quickPrompt('I did not get a response to my RTI in 30 days. Please help me draft a First Appeal under Section 19.')">
+          <i class="bi bi-megaphone me-2 text-danger"></i>Draft First Appeal
+        </button>
+        <button class="quick-btn" onclick="quickPrompt('What is the RTI Act 2005? How can it help me as a citizen?')">
+          <i class="bi bi-info-circle me-2 text-info"></i>What is RTI?
+        </button>
+        <button class="quick-btn" onclick="quickPrompt('What are the exemptions under Section 8 of the RTI Act?')">
+          <i class="bi bi-shield-exclamation me-2 text-secondary"></i>RTI Exemptions
+        </button>
+        <button class="quick-btn" onclick="quickPrompt('What is the fee for filing an RTI application?')">
+          <i class="bi bi-currency-rupee me-2 text-success"></i>Fee Information
+        </button>
+      </div>
+    </div>
+
+    <!-- Deadline Tracker -->
+    <div class="sidebar-section">
+      <h6><i class="bi bi-calendar-check me-1"></i>Deadline Tracker</h6>
+      <div class="mb-2">
+        <label class="form-label small text-muted mb-1">Filing Date</label>
+        <input type="date" id="dl-date" class="form-control form-control-sm bg-dark border-secondary text-light"
+               value="{{ today_date }}" />
+      </div>
+      <div class="form-check form-switch mb-2">
+        <input class="form-check-input" type="checkbox" id="dl-lol" />
+        <label class="form-check-label small text-muted" for="dl-lol">Life / Liberty (48 hrs)</label>
+      </div>
+      <button class="quick-btn" onclick="calcDeadline()">
+        <i class="bi bi-calculator me-2"></i>Calculate Deadline
+      </button>
+      <div id="deadline-result" class="mt-2 ps-1"></div>
+    </div>
+
+    <!-- About -->
+    <div class="sidebar-section mt-auto">
+      <h6>About</h6>
+      <p class="text-muted" style="font-size:.75rem; line-height:1.5;">
+        RTI Sahayak helps you draft RTI applications, track deadlines, and file appeals — grounded in the RTI Act, 2005.<br><br>
+        <span class="text-warning"><i class="bi bi-exclamation-triangle me-1"></i></span>
+        Does not submit on your behalf. Verify addresses before filing.
+      </p>
+      <a href="/dashboard" class="quick-btn d-block text-center text-decoration-none mt-1">
+        <i class="bi bi-speedometer2 me-2"></i>View Dashboard
+      </a>
+    </div>
+
+  </aside>
+
+  <!-- Chat pane -->
+  <main class="chat-pane">
+
+    <!-- Chat header -->
+    <div class="chat-header">
+      <div class="avatar">⚖️</div>
+      <div>
+        <h5>RTI Sahayak</h5>
+        <small>Powered by IBM watsonx.ai · Granite · RTI Act, 2005</small>
+      </div>
+      <div class="ms-auto">
+        <button class="btn btn-sm btn-outline-secondary" onclick="resetChat()" title="New conversation">
+          <i class="bi bi-arrow-counterclockwise"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div id="chat-messages">
+      <!-- Welcome message -->
+      <div class="msg-row">
+        <div class="msg-avatar bot">⚖️</div>
+        <div class="bubble bot">Namaste! 🙏 I am <strong>RTI Sahayak</strong>, your Right to Information assistant powered by IBM Granite AI.
+
+I can help you:
+📝 <strong>Draft an RTI application</strong> — just describe your issue
+📣 <strong>Draft a First Appeal</strong> — if you got no response in time
+🗓️ <strong>Track your deadline</strong> — use the sidebar calculator
+📖 <strong>Understand the RTI Act</strong> — provisions, fees, and more
+
+<strong>To get started:</strong> describe your issue in plain language.
+Example: <em>"My pension application has been pending for 6 months."</em>
+
+⚠️ <small>I do not submit applications on your behalf. Verify all details before filing.</small></div>
+      </div>
+    </div>
+
+    <!-- Input bar -->
+    <div class="chat-input-bar">
+      <textarea id="chat-input" rows="1" placeholder="Describe your issue or ask a question about RTI…"
+                onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button id="send-btn" onclick="sendMessage()" title="Send">
+        <i class="bi bi-send-fill"></i>
+      </button>
+    </div>
+
+  </main>
+</div>
+
+<!-- Draft Modal -->
+<div class="modal fade" id="draftModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content bg-dark border border-secondary">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title"><i class="bi bi-file-earmark-text me-2 text-warning"></i><span id="draft-modal-title">Draft</span></h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <pre id="draft-content"></pre>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button class="btn btn-sm btn-outline-secondary" onclick="copyDraft()">
+          <i class="bi bi-clipboard me-1"></i>Copy
+        </button>
+        <button class="btn btn-sm btn-outline-warning" onclick="printDraft()">
+          <i class="bi bi-printer me-1"></i>Print
+        </button>
+        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function showError(msg) {
+  document.getElementById('error-text').textContent = msg;
+  document.getElementById('error-banner').style.display = 'block';
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function scrollToBottom() {
+  const el = document.getElementById('chat-messages');
+  el.scrollTop = el.scrollHeight;
+}
+
+// ── Render a message bubble ───────────────────────────────────────────────────
+
+function appendMessage(role, text) {
+  const container = document.getElementById('chat-messages');
+  const row = document.createElement('div');
+  row.className = `msg-row ${role}`;
+
+  const avatar = document.createElement('div');
+  avatar.className = `msg-avatar ${role}`;
+  avatar.textContent = role === 'user' ? '👤' : '⚖️';
+
+  const bubble = document.createElement('div');
+  bubble.className = `bubble ${role}`;
+  bubble.textContent = text;
+
+  if (role === 'user') { row.appendChild(bubble); row.appendChild(avatar); }
+  else                 { row.appendChild(avatar); row.appendChild(bubble); }
+
+  container.appendChild(row);
+  scrollToBottom();
+  return bubble;
+}
+
+// ── Styled error card for credential / config errors ─────────────────────────
+
+function appendConfigError(text) {
+  const container = document.getElementById('chat-messages');
+  const row = document.createElement('div');
+  row.className = 'msg-row';
+
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar bot';
+  avatar.textContent = '⚖️';
+
+  const card = document.createElement('div');
+  card.style.cssText = [
+    'max-width:72%',
+    'background:#2a1215',
+    'border:1px solid #6b1a22',
+    'border-radius:12px',
+    'padding:.75rem 1rem',
+    'font-size:.83rem',
+    'line-height:1.7',
+    'white-space:pre-wrap',
+    'word-break:break-word'
+  ].join(';');
+
+  const lines = text.split('\n');
+  const heading = document.createElement('div');
+  heading.style.cssText = 'font-weight:700;color:#ff6b7a;margin-bottom:.5rem;font-size:.88rem;';
+  heading.textContent = lines[0];
+  card.appendChild(heading);
+
+  if (lines.length > 1) {
+    const body = document.createElement('div');
+    body.style.color = '#e8c0c5';
+    body.textContent = lines.slice(1).join('\n').trim();
+    card.appendChild(body);
+  }
+
+  row.appendChild(avatar);
+  row.appendChild(card);
+  container.appendChild(row);
+  scrollToBottom();
+}
+
+function appendTyping() {
+  const container = document.getElementById('chat-messages');
+  const row = document.createElement('div');
+  row.className = 'msg-row'; row.id = 'typing-indicator';
+
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar bot'; avatar.textContent = '⚖️';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble bot';
+  bubble.innerHTML = '<span class="typing-dots"><span></span><span></span><span></span></span>';
+
+  row.appendChild(avatar); row.appendChild(bubble);
+  container.appendChild(row);
+  scrollToBottom();
+}
+
+function removeTyping() {
+  const el = document.getElementById('typing-indicator');
+  if (el) el.remove();
+}
+
+// ── Send message ──────────────────────────────────────────────────────────────
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = ''; input.style.height = 'auto';
+  appendMessage('user', text);
+  appendTyping();
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text })
+    });
+    const data = await res.json();
+    removeTyping();
+
+    if (data.error) {
+      if (data.config_required) {
+        appendConfigError(data.error);
+      } else {
+        appendConfigError(data.error);
+      }
+    } else {
+      appendMessage('bot', data.reply);
+    }
+  } catch (err) {
+    removeTyping();
+    appendMessage('bot', '⚠️ Network error. Please check that the server is running.');
+  }
+}
+
+function quickPrompt(text) {
+  document.getElementById('chat-input').value = text;
+  sendMessage();
+}
+
+async function resetChat() {
+  await fetch('/api/chat/reset', { method: 'POST' });
+  document.getElementById('chat-messages').innerHTML = '';
+  appendMessage('bot', 'Chat cleared. How can I help you today?');
+}
+
+// ── Deadline calculator ───────────────────────────────────────────────────────
+
+async function calcDeadline() {
+  const dateVal = document.getElementById('dl-date').value;
+  const lol     = document.getElementById('dl-lol').checked;
+  const result  = document.getElementById('deadline-result');
+
+  if (!dateVal) { result.innerHTML = '<span class="text-warning">Please select a filing date.</span>'; return; }
+
+  try {
+    const res = await fetch('/api/deadline', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filing_date: dateVal, life_or_liberty: lol })
+    });
+    const data = await res.json();
+
+    if (data.error) { result.innerHTML = `<span class="text-danger">${data.error}</span>`; return; }
+
+    const dl = new Date(data.deadline).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+    const rem = data.days_remaining;
+    let cls, icon, msg;
+
+    if (data.status === 'overdue') {
+      cls = 'deadline-over'; icon = '🔴';
+      msg = `Overdue by <strong>${Math.abs(rem)} day(s)</strong>.<br>File a First Appeal!`;
+    } else if (data.status === 'due_soon') {
+      cls = 'deadline-warn'; icon = '🟡';
+      msg = `<strong>${rem} day(s)</strong> remaining.`;
+    } else {
+      cls = 'deadline-ok'; icon = '🟢';
+      msg = `<strong>${rem} day(s)</strong> remaining.`;
+    }
+
+    result.innerHTML = `
+      <div class="${cls}">
+        ${icon} <strong>${lol ? '48-hr' : '30-day'} Deadline:</strong> ${dl}<br>
+        ${msg}
+      </div>`;
+  } catch {
+    result.innerHTML = '<span class="text-danger">Error calculating deadline.</span>';
+  }
+}
+
+// ── Draft modal helpers ───────────────────────────────────────────────────────
+
+function showDraft(title, text) {
+  document.getElementById('draft-modal-title').textContent = title;
+  document.getElementById('draft-content').textContent = text;
+  new bootstrap.Modal(document.getElementById('draftModal')).show();
+}
+
+function copyDraft() {
+  const text = document.getElementById('draft-content').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target.closest('button');
+    btn.innerHTML = '<i class="bi bi-check2 me-1"></i>Copied!';
+    setTimeout(() => btn.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy', 2000);
+  });
+}
+
+function printDraft() {
+  const text = document.getElementById('draft-content').textContent;
+  const win = window.open('', '_blank');
+  win.document.write('<pre style="font-family:monospace;padding:20px;">' + text + '</pre>');
+  win.print();
+}
+
+// Set today's date in deadline picker
+document.addEventListener('DOMContentLoaded', () => {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('dl-date').value = today;
+});
+</script>
+</body>
+</html>
