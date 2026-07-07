@@ -63,33 +63,62 @@ def draft_rti_application(
     bpl: bool = False,
     life_or_liberty: bool = False,
     preferred_language: str = "English",
+    is_state_dept: bool = False,
+    expedited_note: Optional[str] = None,
 ) -> str:
-    """Return a fully formatted RTI application under Section 6(1)."""
+    """Return a fully formatted RTI application under Section 6(1).
+
+    Args:
+        is_state_dept:  Set True when the department is a State Government body.
+                        Appends a caveat that the fee may vary by state RTI rules.
+        expedited_note: If the user wants a faster response, pass that as a
+                        plain-language request here.  It is printed as a separate
+                        polite line and NEVER overrides the statutory deadline.
+    """
     if filing_date is None:
         filing_date = date.today()
 
     deadline = compute_deadline(filing_date, life_or_liberty)
-    timeline_note = (
-        "48 hours (this matter concerns life or liberty — Section 7 proviso)"
-        if life_or_liberty
-        else "30 days (Section 7(1) of the RTI Act, 2005)"
-    )
-    fee_note = (
-        "I am a Below Poverty Line (BPL) applicant. I am attaching a copy of my BPL "
-        "certificate/card. No fee is therefore payable as per Rule 5 of the Right to "
-        "Information (Regulation of Fee and Cost) Rules, 2005."
-        if bpl
-        else (
-            "I am enclosing the prescribed application fee of Rs 10 (ten rupees) by "
-            "[IPO / Demand Draft / Banker's Cheque / online payment — please choose one] "
+
+    # Statutory timeline — fixed by law; never shortened.
+    if life_or_liberty:
+        timeline_note = "48 hours (this matter concerns life or liberty — Section 7 proviso)"
+    else:
+        timeline_note = "30 days (Section 7(1) of the RTI Act, 2005)"
+
+    # Fee — Rs. 10/- is the prescribed Central fee (Rule 3, RTI Fee Rules 2005).
+    # BPL applicants are fully exempt (Rule 5).  First Appeals carry no fee.
+    if bpl:
+        fee_note = (
+            "I am a Below Poverty Line (BPL) applicant. I am attaching a copy of my BPL "
+            "certificate/card. No fee is therefore payable as per Rule 5 of the Right to "
+            "Information (Regulation of Fee and Cost) Rules, 2005."
+        )
+    else:
+        fee_note = (
+            "I am enclosing the prescribed application fee of Rs. 10/- (Rupees Ten only) "
+            "by [IPO / Demand Draft / Banker's Cheque / online payment — please choose one] "
             "as required under Rule 3 of the Right to Information "
             "(Regulation of Fee and Cost) Rules, 2005."
         )
-    )
+        if is_state_dept:
+            fee_note += (
+                "\nNote: The fee for State Government RTI applications may vary slightly "
+                "by state. Please verify the applicable fee under your State RTI Rules "
+                "before submission."
+            )
 
     numbered_questions = "\n".join(
         f"  {i + 1}. {q}" for i, q in enumerate(information_sought)
     )
+
+    # Build optional expedited request line (separate from the statutory deadline).
+    expedited_line = ""
+    if expedited_note:
+        expedited_line = (
+            f"\nURGENT REQUEST (without prejudice to statutory deadline):\n"
+            f"{expedited_note}\n"
+        )
 
     return f"""APPLICATION UNDER THE RIGHT TO INFORMATION ACT, 2005
 (Section 6 — Request for Information)
@@ -116,7 +145,7 @@ INFORMATION SOUGHT:
 STATUTORY TIMELINE:
 Under {timeline_note}, you are required to provide the information or \
 communicate a decision within the statutory deadline: {deadline.strftime('%d %B %Y')}.
-
+{expedited_line}
 FEE:
 {fee_note}
 
@@ -137,6 +166,7 @@ Date: {filing_date.strftime('%d %B %Y')}
 {'=' * 60}
 NOTE: If no response is received by {deadline.strftime('%d %B %Y')}, you may \
 file a First Appeal under Section 19(1) of the RTI Act, 2005.
+No fee is required for filing a First Appeal.
 Always verify the PIO's current name and address before submission.
 {'=' * 60}""".strip()
 

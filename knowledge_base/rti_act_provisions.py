@@ -140,19 +140,29 @@ RTI_ACT_CHUNKS = [
             "specified in sub-section (1) of section 7, or is aggrieved by a decision of the "
             "CPIO or SPIO, may within 30 days from the expiry of such period or from the "
             "receipt of such a decision prefer an appeal to such officer who is senior in rank "
-            "to the CPIO or SPIO in each public authority. The officer may admit the appeal "
-            "after the expiry of the period of 30 days if satisfied that the appellant was "
-            "prevented by sufficient cause from filing the appeal in time.\n\n"
+            "to the CPIO or SPIO in each public authority. This officer is designated the "
+            "First Appellate Authority (FAA). The FAA is NOT the CPIO or SPIO — the FAA is a "
+            "different, more senior officer in the same public authority. The FAA may admit "
+            "the appeal after the expiry of the period of 30 days if satisfied that the "
+            "appellant was prevented by sufficient cause from filing the appeal in time.\n\n"
+            "IMPORTANT — correct terminology: The recipient of a First Appeal under "
+            "Section 19(1) must always be addressed as 'The First Appellate Authority (FAA)'. "
+            "Never address a First Appeal to the CPIO, SPIO, or PIO — the appeal is filed "
+            "against the PIO's non-response, so it must go to the FAA who is senior to the PIO.\n\n"
             "Section 19(3) – A second appeal against the decision under sub-section (1) shall "
             "lie within 90 days from the date on which the decision should have been made or "
-            "was actually received, with the Central Information Commission or the State "
-            "Information Commission.\n\n"
+            "was actually received, with the Central Information Commission (CIC) for Central "
+            "Government authorities, or the State Information Commission (SIC) for State "
+            "Government authorities.\n\n"
             "Section 19(5) – In any appeal proceedings, the burden of proving that a denial "
             "of a request was justified shall be on the CPIO or SPIO who denied the request.\n\n"
             "Section 19(8) – The CIC or SIC in its decision may require the public authority "
             "to compensate the complainant for any loss; impose penalties; or reject the complaint."
         ),
-        "tags": ["appeal", "first appeal", "second appeal", "Section 19", "CIC", "SIC", "appellate officer"],
+        "tags": [
+            "appeal", "first appeal", "second appeal", "Section 19", "CIC", "SIC",
+            "First Appellate Authority", "FAA", "appellate officer", "not SPIO", "not PIO",
+        ],
     },
     {
         "id": "sec20_penalty",
@@ -175,15 +185,56 @@ RTI_ACT_CHUNKS = [
         "title": "RTI Fee Rules – Central Government",
         "text": (
             "Right to Information (Regulation of Fee and Cost) Rules, 2005:\n"
-            "Rule 3 – Application fee: Rs 10 (ten rupees) for a request under Section 6(1).\n"
-            "Rule 4 – Additional fee: Rs 2 per page (A4/A3); actual charge for larger size paper; "
-            "actual cost for samples or models; Rs 50 per diskette or floppy; free of charge "
-            "for first hour of inspection of records, Rs 5 for each subsequent hour.\n"
-            "Rule 5 – BPL applicants: no fee charged. Applicant must furnish proof of BPL status.\n"
-            "Payment modes: Demand Draft, Banker's Cheque, Indian Postal Order payable to the "
-            "Accounts Officer; cash against proper receipt; online payment via RTI Online Portal."
+            "Rule 3 – Application fee: Rs. 10/- (Rupees Ten only) for a request under "
+            "Section 6(1). This is the only correct fee for Central Government applications. "
+            "Never state a different amount.\n"
+            "Rule 4 – Additional fee for providing information: Rs. 2/- per page (A4/A3 size); "
+            "actual charge for larger size paper; actual cost for samples or models; "
+            "Rs. 50/- per diskette or floppy; free of charge for the first hour of inspection "
+            "of records, Rs. 5/- for each subsequent hour.\n"
+            "Rule 5 – BPL (Below Poverty Line) applicants: NO fee is charged for the "
+            "application. The applicant must furnish proof of BPL status (BPL card/certificate).\n"
+            "First Appeals (Section 19(1)): NO fee is required. A First Appeal is free of charge.\n"
+            "Second Appeals to CIC/SIC (Section 19(3)): NO fee is required.\n"
+            "Payment modes for application fee: Demand Draft, Banker's Cheque, Indian Postal "
+            "Order (IPO) payable to the Accounts Officer of the concerned public authority; "
+            "cash against proper receipt; online payment via the RTI Online Portal "
+            "(https://rtionline.gov.in)."
         ),
-        "tags": ["fee", "Rs 10", "application fee", "BPL", "cost", "payment"],
+        "tags": [
+            "fee", "Rs. 10", "Rs 10", "application fee", "BPL", "cost", "payment",
+            "first appeal fee", "no fee", "appeal fee exemption",
+        ],
+    },
+    {
+        "id": "fee_rules_state",
+        "title": "RTI Fee Rules – State Government",
+        "text": (
+            "State RTI Fee Rules:\n"
+            "For State Government public authorities, the application fee is governed by "
+            "each state's own RTI Rules (made under Section 27 of the RTI Act, 2005). "
+            "Most states prescribe Rs. 10/- as the application fee, matching the Central rules. "
+            "However, some states may prescribe a different amount (commonly between Rs. 5/- "
+            "and Rs. 50/-).\n"
+            "When drafting an RTI application for a State Government department, always:\n"
+            "1. State Rs. 10/- as the fee (the most common state fee).\n"
+            "2. Add a note: 'The fee may vary slightly by state; please verify the applicable "
+            "   fee under [State] Right to Information Rules before submission.'\n"
+            "BPL exemption applies equally in all states — no fee for BPL applicants.\n"
+            "First Appeals and Second Appeals to SIC: NO fee required in all states.\n"
+            "Examples of known state fees (verify before use):\n"
+            "  • Maharashtra: Rs. 10/- (Maharashtra RTI Rules, 2005)\n"
+            "  • Karnataka: Rs. 10/- (Karnataka RTI Rules, 2005)\n"
+            "  • Uttar Pradesh: Rs. 10/-\n"
+            "  • Tamil Nadu: Rs. 10/-\n"
+            "  • West Bengal: Rs. 10/-\n"
+            "Always direct applicants to verify with the concerned state's RTI portal or "
+            "the department's public notice board."
+        ),
+        "tags": [
+            "fee", "state fee", "state RTI rules", "Rs. 10", "state government",
+            "BPL", "first appeal fee", "no fee", "state appeal",
+        ],
     },
     {
         "id": "online_filing",

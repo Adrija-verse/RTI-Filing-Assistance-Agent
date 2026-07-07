@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,173 +7,418 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
   <style>
-    :root { --brand:#f4801a; --surface:#1a1d23; --surface2:#22262f; --border:#2e3340; --text-muted:#8b93a5; }
-    body { background:#13161c; color:#d4d8e2; font-family:'Segoe UI',system-ui,sans-serif; }
-    .navbar { background:var(--surface) !important; border-bottom:1px solid var(--border); }
-    .navbar-brand { font-weight:700; color:var(--brand) !important; }
-    .nav-link { color:#a0aabb !important; }
-    .nav-link:hover { color:var(--brand) !important; }
-    .info-card { background:var(--surface2); border:1px solid var(--border); border-radius:12px; }
-    .info-label { font-size:.72rem; text-transform:uppercase; letter-spacing:.5px; color:var(--text-muted); margin-bottom:.15rem; }
-    .info-value { font-size:.9rem; font-weight:500; }
-    .draft-box {
-      background:#13161c; color:#d4d8e2; border:1px solid var(--border);
-      border-radius:8px; padding:1.25rem; font-size:.8rem; line-height:1.7;
-      white-space:pre-wrap; max-height:65vh; overflow-y:auto;
-      font-family:'Courier New',monospace;
+    :root {
+      --gov-blue:     #003580;
+      --gov-blue-mid: #0050b3;
+      --gov-blue-lt:  #e8f0fe;
+      --gov-orange:   #f26522;
+      --gov-green:    #1a7a3f;
+      --gov-red:      #c0392b;
+      --gov-amber:    #d97706;
+      --surface:      #f4f6fb;
+      --surface2:     #ffffff;
+      --border:       #dde3ef;
+      --text:         #1a2340;
+      --text-muted:   #5a6a8a;
+      --shadow-sm:    0 1px 4px rgba(0,53,128,.08);
+      --shadow-md:    0 4px 16px rgba(0,53,128,.10);
     }
-    .badge-on-track { background:rgba(25,135,84,.25);color:#2ecc71;border:1px solid rgba(25,135,84,.4); }
-    .badge-due-soon  { background:rgba(253,126,20,.2);color:#fd7e14;border:1px solid rgba(253,126,20,.4); }
-    .badge-overdue   { background:rgba(220,53,69,.2);color:#ff6b7a;border:1px solid rgba(220,53,69,.4); }
-    .status-badge { font-size:.75rem; font-weight:600; padding:.3rem .7rem; border-radius:20px; }
+
+    * { box-sizing: border-box; }
+    body {
+      background: var(--surface);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 14px;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      background: var(--surface2) !important;
+      border-bottom: 3px solid var(--gov-orange);
+      box-shadow: var(--shadow-md);
+      padding: 0 1rem;
+    }
+    .navbar-brand {
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--gov-blue) !important;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .navbar-brand .brand-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--gov-blue), var(--gov-blue-mid));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.1rem;
+    }
+    .navbar-brand .brand-sub {
+      font-size: .65rem; font-weight: 400;
+      color: var(--text-muted); display: block; line-height: 1.1;
+    }
+    .nav-link {
+      color: var(--text-muted) !important;
+      font-size: .84rem; font-weight: 500;
+      padding: .9rem .85rem !important;
+      border-bottom: 3px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--gov-blue) !important;
+      border-bottom-color: var(--gov-orange);
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      background: linear-gradient(135deg, var(--gov-blue) 0%, var(--gov-blue-mid) 100%);
+      color: #fff;
+      padding: 1.25rem 1.5rem 1rem;
+    }
+    .page-header h5 { font-weight: 800; font-size: 1.05rem; margin-bottom: .15rem; }
+    .page-header .subject-line { color: rgba(255,255,255,.75); font-size: .82rem; }
+    .page-header .back-link {
+      color: rgba(255,255,255,.8); font-size: .82rem;
+      text-decoration: none; display: inline-flex; align-items: center; gap: .3rem;
+    }
+    .page-header .back-link:hover { color: #fff; }
+
+    /* ── Info card ── */
+    .info-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+    .info-card-header {
+      background: var(--gov-blue-lt);
+      border-bottom: 1px solid var(--border);
+      padding: .65rem 1rem;
+      border-radius: 12px 12px 0 0;
+      font-size: .8rem; font-weight: 700;
+      color: var(--gov-blue);
+      display: flex; align-items: center; gap: .45rem;
+    }
+    .info-label {
+      font-size: .68rem; text-transform: uppercase;
+      letter-spacing: .6px; color: var(--text-muted);
+      font-weight: 600; margin-bottom: .2rem;
+    }
+    .info-value {
+      font-size: .88rem; font-weight: 600;
+      color: var(--text);
+    }
+
+    /* ── Status badges ── */
+    .badge-on-track {
+      background: rgba(26,122,63,.1); color: var(--gov-green);
+      border: 1px solid rgba(26,122,63,.3);
+    }
+    .badge-due-soon {
+      background: rgba(217,119,6,.1); color: var(--gov-amber);
+      border: 1px solid rgba(217,119,6,.3);
+    }
+    .badge-overdue {
+      background: rgba(192,57,43,.1); color: var(--gov-red);
+      border: 1px solid rgba(192,57,43,.3);
+    }
+    .status-badge {
+      font-size: .76rem; font-weight: 700;
+      padding: .3rem .8rem; border-radius: 20px;
+      display: inline-flex; align-items: center; gap: .35rem;
+    }
+    .status-dot {
+      width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+    }
+    .status-dot.green { background: var(--gov-green); }
+    .status-dot.amber { background: var(--gov-amber); }
+    .status-dot.red {
+      background: var(--gov-red);
+      animation: pulse-red 1.5s infinite;
+    }
+    @keyframes pulse-red {
+      0%,100% { box-shadow: 0 0 0 2px rgba(192,57,43,.2); }
+      50%      { box-shadow: 0 0 0 5px rgba(192,57,43,.08); }
+    }
+
+    /* ── Deadline progress ── */
+    .deadline-bar-wrap {
+      background: var(--border); border-radius: 4px; height: 6px;
+      margin-top: .35rem; overflow: hidden;
+    }
+    .deadline-bar {
+      height: 100%; border-radius: 4px;
+      transition: width .6s ease;
+    }
+
+    /* ── Draft box ── */
+    .draft-box {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px; padding: 1.25rem;
+      font-size: .8rem; line-height: 1.75;
+      white-space: pre-wrap; max-height: 65vh; overflow-y: auto;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    /* ── Appeal section ── */
+    .appeal-card {
+      border: 1.5px solid rgba(192,57,43,.35);
+      border-radius: 12px;
+      background: #fff9f9;
+    }
+    .appeal-card .appeal-header {
+      background: rgba(192,57,43,.07);
+      border-bottom: 1px solid rgba(192,57,43,.2);
+      border-radius: 12px 12px 0 0;
+      padding: .65rem 1rem;
+      font-size: .8rem; font-weight: 700;
+      color: var(--gov-red);
+      display: flex; align-items: center; gap: .45rem;
+    }
+    .appeal-card .form-control {
+      border: 1px solid var(--border);
+      font-size: .83rem;
+      color: var(--text);
+    }
+    .appeal-card .form-control:focus {
+      border-color: var(--gov-blue-mid);
+      box-shadow: 0 0 0 3px rgba(0,80,179,.1);
+    }
+    .appeal-card label.form-label {
+      font-size: .76rem; color: var(--text-muted); font-weight: 600;
+    }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb-bar {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: .45rem 1rem;
+      font-size: .76rem;
+    }
+    .breadcrumb-bar a { color: var(--gov-blue-mid); text-decoration: none; }
+    .breadcrumb-bar a:hover { text-decoration: underline; }
+    .breadcrumb-bar span { color: var(--text-muted); }
+
+    /* Buttons */
+    .btn-gov {
+      background: var(--gov-blue); color: #fff; border: none;
+      font-size: .82rem; font-weight: 600;
+      border-radius: 7px; padding: .4rem .9rem;
+      transition: background .15s, box-shadow .15s;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-gov:hover { background: var(--gov-blue-mid); color: #fff; box-shadow: var(--shadow-md); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--surface); }
+    ::-webkit-scrollbar-thumb { background: #c0cce0; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #9aaac8; }
+
+    /* Fade in */
+    .fade-in { animation: fadeIn .3s ease; }
+    @keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
   </style>
 </head>
 <body>
+
+<!-- Navbar -->
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid px-3">
-    <a class="navbar-brand" href="/"><i class="bi bi-scale me-2"></i>RTI Sahayak</a>
-    <div class="ms-auto">
-      <a class="nav-link d-inline" href="/dashboard"><i class="bi bi-arrow-left me-1"></i>Back to Dashboard</a>
+    <a class="navbar-brand" href="/">
+      <div class="brand-icon"><i class="bi bi-scale"></i></div>
+      <div>
+        RTI Sahayak
+        <span class="brand-sub">Right to Information Filing Assistant</span>
+      </div>
+    </a>
+    <div class="ms-auto d-flex align-items-center gap-2">
+      <a class="nav-link" href="/"><i class="bi bi-chat-dots me-1"></i>Chat</a>
+      <a class="nav-link" href="/dashboard"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
     </div>
   </div>
 </nav>
 
-<div class="container py-4" style="max-width:860px;">
+<!-- Breadcrumb -->
+<div class="breadcrumb-bar">
+  <div class="container-fluid px-3" style="max-width:900px;">
+    <a href="/"><i class="bi bi-house me-1"></i>Home</a>
+    &nbsp;/&nbsp;
+    <a href="/dashboard">Dashboard</a>
+    &nbsp;/&nbsp;
+    <span>Application #{{ app.id }}</span>
+  </div>
+</div>
 
-  <!-- Header -->
-  <div class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-4">
-    <div>
-      <h5 class="fw-bold mb-1">Application #{{ app.id }}</h5>
-      <p class="text-muted mb-0" style="font-size:.85rem;">{{ app.subject }}</p>
-    </div>
-    <div class="d-flex gap-2">
-      {% if app.status == 'overdue' %}
-        <span class="status-badge badge-overdue">🔴 Overdue</span>
-      {% elif app.status == 'due_soon' %}
-        <span class="status-badge badge-due-soon">🟡 Due Soon</span>
-      {% else %}
-        <span class="status-badge badge-on-track">🟢 On Track</span>
-      {% endif %}
+<!-- Page header -->
+<div class="page-header">
+  <div class="container-fluid px-3" style="max-width:900px;">
+    <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+      <div>
+        <h5><i class="bi bi-file-earmark-text me-2"></i>Application #{{ app.id }}</h5>
+        <div class="subject-line">{{ app.subject }}</div>
+      </div>
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        {% if app.status == 'overdue' %}
+          <span class="status-badge badge-overdue">
+            <span class="status-dot red"></span>Overdue
+          </span>
+        {% elif app.status == 'due_soon' %}
+          <span class="status-badge badge-due-soon">
+            <span class="status-dot amber"></span>Due Soon
+          </span>
+        {% else %}
+          <span class="status-badge badge-on-track">
+            <span class="status-dot green"></span>On Track
+          </span>
+        {% endif %}
+      </div>
     </div>
   </div>
+</div>
 
-  <!-- Info grid -->
-  <div class="info-card p-3 mb-3">
-    <div class="row g-3">
-      <div class="col-6 col-md-3">
-        <div class="info-label">Department</div>
-        <div class="info-value">{{ app.department }}</div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="info-label">Date Filed</div>
-        <div class="info-value">{{ app.date_filed }}</div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="info-label">Deadline</div>
-        <div class="info-value">{{ app.deadline }}</div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="info-label">Days Remaining</div>
-        <div class="info-value
-          {% if app.days_remaining < 0 %}text-danger
-          {% elif app.days_remaining <= 5 %}text-warning
-          {% else %}text-success{% endif %}">
-          {% if app.days_remaining < 0 %}
-            {{ app.days_remaining|abs }} days overdue
-          {% else %}
-            {{ app.days_remaining }} days
+<div class="container-fluid py-4 fade-in" style="max-width:900px; padding-left:1rem; padding-right:1rem;">
+
+  <!-- Info grid card -->
+  <div class="info-card mb-3">
+    <div class="info-card-header">
+      <i class="bi bi-info-circle-fill"></i>Application Details
+    </div>
+    <div class="p-3">
+      <div class="row g-3">
+        <div class="col-6 col-md-3">
+          <div class="info-label">Department</div>
+          <div class="info-value">{{ app.department }}</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="info-label">Date Filed</div>
+          <div class="info-value">{{ app.date_filed }}</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="info-label">Deadline</div>
+          <div class="info-value">{{ app.deadline }}</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="info-label">Days Remaining</div>
+          <div class="info-value
+            {% if app.days_remaining < 0 %}text-danger
+            {% elif app.days_remaining <= 5 %}text-warning
+            {% else %}text-success{% endif %}
+            fw-bold">
+            {% if app.days_remaining < 0 %}
+              <i class="bi bi-exclamation-circle me-1"></i>{{ app.days_remaining|abs }} days overdue
+            {% else %}
+              {{ app.days_remaining }} days left
+            {% endif %}
+          </div>
+          <!-- Deadline progress bar -->
+          {% if app.days_remaining >= 0 %}
+          <div class="deadline-bar-wrap">
+            <div class="deadline-bar"
+              style="width: {{ [[(app.days_remaining / 30 * 100)|int, 0]|max, 100]|min }}%;
+                     background: {% if app.days_remaining <= 5 %}var(--gov-amber){% else %}var(--gov-green){% endif %};"></div>
+          </div>
           {% endif %}
         </div>
+        <div class="col-6 col-md-3">
+          <div class="info-label">Applicant</div>
+          <div class="info-value">{{ app.applicant_name or '—' }}</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="info-label">Contact</div>
+          <div class="info-value">{{ app.applicant_contact or '—' }}</div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="info-label">PIO Address</div>
+          <div class="info-value" style="font-size:.8rem;">{{ app.pio_address or '—' }}</div>
+        </div>
+        {% if app.ref_number %}
+        <div class="col-6 col-md-3">
+          <div class="info-label">Reference No.</div>
+          <div class="info-value">{{ app.ref_number }}</div>
+        </div>
+        {% endif %}
+        {% if app.life_liberty %}
+        <div class="col-12">
+          <span class="badge text-bg-danger" style="font-size:.74rem; padding:.35rem .7rem; border-radius:6px;">
+            <i class="bi bi-lightning-fill me-1"></i>Life / Liberty matter — 48-hour statutory deadline applied
+          </span>
+        </div>
+        {% endif %}
       </div>
-      <div class="col-6 col-md-3">
-        <div class="info-label">Applicant</div>
-        <div class="info-value">{{ app.applicant_name or '—' }}</div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="info-label">Contact</div>
-        <div class="info-value">{{ app.applicant_contact or '—' }}</div>
-      </div>
-      <div class="col-12 col-md-6">
-        <div class="info-label">PIO Address</div>
-        <div class="info-value" style="font-size:.82rem;">{{ app.pio_address or '—' }}</div>
-      </div>
-      {% if app.ref_number %}
-      <div class="col-6 col-md-3">
-        <div class="info-label">Reference No.</div>
-        <div class="info-value">{{ app.ref_number }}</div>
-      </div>
-      {% endif %}
-      {% if app.life_liberty %}
-      <div class="col-12">
-        <span class="badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-25">
-          ⚡ Life / Liberty matter — 48-hour statutory deadline applied
-        </span>
-      </div>
-      {% endif %}
     </div>
   </div>
 
   <!-- Draft text -->
   {% if app.draft_text %}
-  <div class="info-card p-3 mb-3">
-    <div class="d-flex align-items-center justify-content-between mb-2">
-      <span class="fw-semibold" style="font-size:.9rem;"><i class="bi bi-file-earmark-text me-2 text-warning"></i>Application Draft</span>
-      <div class="d-flex gap-2">
-        <button class="btn btn-sm btn-outline-secondary" onclick="copyDraft()">
+  <div class="info-card mb-3">
+    <div class="info-card-header">
+      <i class="bi bi-file-earmark-text-fill"></i>Application Draft
+      <div class="ms-auto d-flex gap-2">
+        <button class="btn btn-sm btn-outline-secondary" style="font-size:.75rem;" onclick="copyDraft()">
           <i class="bi bi-clipboard me-1"></i>Copy
         </button>
-        <button class="btn btn-sm btn-outline-secondary" onclick="printDraft()">
+        <button class="btn btn-sm btn-outline-secondary" style="font-size:.75rem;" onclick="printDraft()">
           <i class="bi bi-printer me-1"></i>Print
         </button>
       </div>
     </div>
-    <pre class="draft-box" id="draft-text">{{ app.draft_text }}</pre>
+    <div class="p-3">
+      <pre class="draft-box" id="draft-text">{{ app.draft_text }}</pre>
+    </div>
   </div>
   {% endif %}
 
   <!-- First Appeal section (shown if overdue) -->
   {% if app.status == 'overdue' %}
-  <div class="info-card p-3 mb-3 border-danger border-opacity-50">
-    <h6 class="text-danger mb-3"><i class="bi bi-megaphone-fill me-2"></i>First Appeal (Section 19 — RTI Act, 2005)</h6>
-    <p class="text-muted small mb-3">
-      The statutory deadline has passed. You are entitled to file a First Appeal.
-      Fill in any missing details and click <strong>Generate First Appeal</strong>.
-    </p>
-    <div class="row g-2 mb-3">
-      <div class="col-md-4">
-        <label class="form-label small text-muted">Applicant Name</label>
-        <input type="text" id="fa-name" class="form-control form-control-sm bg-dark border-secondary text-light"
-               value="{{ app.applicant_name }}" />
-      </div>
-      <div class="col-md-4">
-        <label class="form-label small text-muted">Applicant Contact</label>
-        <input type="text" id="fa-contact" class="form-control form-control-sm bg-dark border-secondary text-light"
-               value="{{ app.applicant_contact }}" />
-      </div>
-      <div class="col-md-4">
-        <label class="form-label small text-muted">Appellate Authority Address</label>
-        <input type="text" id="fa-faa" class="form-control form-control-sm bg-dark border-secondary text-light"
-               placeholder="Officer senior in rank to PIO" />
-      </div>
-      <div class="col-12">
-        <label class="form-label small text-muted">Applicant Address</label>
-        <input type="text" id="fa-addr" class="form-control form-control-sm bg-dark border-secondary text-light"
-               value="{{ app.applicant_address }}" />
-      </div>
+  <div class="appeal-card mb-3">
+    <div class="appeal-header">
+      <i class="bi bi-megaphone-fill"></i>First Appeal — Section 19 of RTI Act, 2005
     </div>
-    <button class="btn btn-sm btn-danger" onclick="generateAppeal()">
-      <i class="bi bi-lightning-fill me-1"></i>Generate First Appeal
-    </button>
-    <div id="appeal-area" class="mt-3" style="display:none;">
-      <div class="d-flex justify-content-end gap-2 mb-2">
-        <button class="btn btn-sm btn-outline-secondary" onclick="copyAppeal()">
-          <i class="bi bi-clipboard me-1"></i>Copy Appeal
-        </button>
-        <button class="btn btn-sm btn-outline-secondary" onclick="printAppeal()">
-          <i class="bi bi-printer me-1"></i>Print
-        </button>
+    <div class="p-3">
+      <div class="alert alert-warning py-2 px-3 mb-3" style="font-size:.8rem; border-radius:8px;">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        The statutory 30-day deadline has passed. You are legally entitled to file a First Appeal.
+        Fill in the details below and click <strong>Generate First Appeal</strong>.
       </div>
-      <pre class="draft-box" id="appeal-text"></pre>
+      <div class="row g-2 mb-3">
+        <div class="col-md-4">
+          <label class="form-label">Applicant Name</label>
+          <input type="text" id="fa-name" class="form-control form-control-sm"
+                 value="{{ app.applicant_name }}" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Applicant Contact</label>
+          <input type="text" id="fa-contact" class="form-control form-control-sm"
+                 value="{{ app.applicant_contact }}" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Appellate Authority Address</label>
+          <input type="text" id="fa-faa" class="form-control form-control-sm"
+                 placeholder="Officer senior in rank to PIO" />
+        </div>
+        <div class="col-12">
+          <label class="form-label">Applicant Address</label>
+          <input type="text" id="fa-addr" class="form-control form-control-sm"
+                 value="{{ app.applicant_address }}" />
+        </div>
+      </div>
+      <button class="btn btn-sm" style="background:var(--gov-red);color:#fff;font-weight:600;"
+              onclick="generateAppeal()">
+        <i class="bi bi-lightning-fill me-1"></i>Generate First Appeal
+      </button>
+      <div id="appeal-area" class="mt-3" style="display:none;">
+        <div class="d-flex justify-content-end gap-2 mb-2">
+          <button class="btn btn-sm btn-outline-secondary" style="font-size:.75rem;" onclick="copyAppeal()">
+            <i class="bi bi-clipboard me-1"></i>Copy Appeal
+          </button>
+          <button class="btn btn-sm btn-outline-secondary" style="font-size:.75rem;" onclick="printAppeal()">
+            <i class="bi bi-printer me-1"></i>Print
+          </button>
+        </div>
+        <pre class="draft-box" id="appeal-text"></pre>
+      </div>
     </div>
   </div>
   {% endif %}
@@ -181,8 +426,8 @@
   <!-- Delete -->
   <div class="d-flex justify-content-end">
     <form method="POST" action="/application/{{ app.id }}/delete"
-          onsubmit="return confirm('Permanently delete this application?')">
-      <button type="submit" class="btn btn-sm btn-outline-danger">
+          onsubmit="return confirm('Permanently delete this application? This cannot be undone.')">
+      <button type="submit" class="btn btn-sm btn-outline-danger" style="font-size:.82rem;">
         <i class="bi bi-trash3 me-1"></i>Delete Application
       </button>
     </form>
@@ -194,21 +439,42 @@
 <script>
 function copyDraft() {
   navigator.clipboard.writeText(document.getElementById('draft-text').textContent)
-    .then(() => alert('Draft copied to clipboard!'));
+    .then(() => {
+      const btn = event.target.closest('button');
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<i class="bi bi-check2 me-1"></i>Copied!';
+      btn.classList.replace('btn-outline-secondary', 'btn-success');
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.classList.replace('btn-success', 'btn-outline-secondary');
+      }, 2000);
+    });
 }
+
 function printDraft() {
-  const w = window.open('','_blank');
-  w.document.write('<pre style="font-family:monospace;padding:20px;">' +
+  const w = window.open('', '_blank');
+  w.document.write('<pre style="font-family:monospace;padding:24px;font-size:13px;line-height:1.7;">' +
     document.getElementById('draft-text').textContent + '</pre>');
   w.print();
 }
+
 function copyAppeal() {
   navigator.clipboard.writeText(document.getElementById('appeal-text').textContent)
-    .then(() => alert('Appeal copied to clipboard!'));
+    .then(() => {
+      const btn = event.target.closest('button');
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<i class="bi bi-check2 me-1"></i>Copied!';
+      btn.classList.replace('btn-outline-secondary', 'btn-success');
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.classList.replace('btn-success', 'btn-outline-secondary');
+      }, 2000);
+    });
 }
+
 function printAppeal() {
-  const w = window.open('','_blank');
-  w.document.write('<pre style="font-family:monospace;padding:20px;">' +
+  const w = window.open('', '_blank');
+  w.document.write('<pre style="font-family:monospace;padding:24px;font-size:13px;line-height:1.7;">' +
     document.getElementById('appeal-text').textContent + '</pre>');
   w.print();
 }
@@ -226,11 +492,12 @@ async function generateAppeal() {
   };
 
   const btn = document.querySelector('button[onclick="generateAppeal()"]');
-  btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Generating…';
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Generating…';
 
   try {
     const res = await fetch('/api/draft/appeal', {
-      method:'POST', headers:{'Content-Type':'application/json'},
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
     const data = await res.json();
@@ -238,8 +505,9 @@ async function generateAppeal() {
     else {
       document.getElementById('appeal-text').textContent = data.draft;
       document.getElementById('appeal-area').style.display = 'block';
+      document.getElementById('appeal-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  } catch(e) { alert('Network error.'); }
+  } catch(e) { alert('Network error. Please try again.'); }
   finally {
     btn.disabled = false;
     btn.innerHTML = '<i class="bi bi-lightning-fill me-1"></i>Generate First Appeal';

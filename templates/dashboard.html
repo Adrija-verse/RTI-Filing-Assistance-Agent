@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,74 +8,307 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
   <style>
     :root {
-      --brand: #f4801a;
-      --surface: #1a1d23;
-      --surface2: #22262f;
-      --border: #2e3340;
-      --text-muted: #8b93a5;
+      --gov-blue:     #003580;
+      --gov-blue-mid: #0050b3;
+      --gov-blue-lt:  #e8f0fe;
+      --gov-orange:   #f26522;
+      --gov-green:    #1a7a3f;
+      --gov-red:      #c0392b;
+      --gov-amber:    #d97706;
+      --surface:      #f4f6fb;
+      --surface2:     #ffffff;
+      --border:       #dde3ef;
+      --text:         #1a2340;
+      --text-muted:   #5a6a8a;
+      --shadow-sm:    0 1px 4px rgba(0,53,128,.08);
+      --shadow-md:    0 4px 16px rgba(0,53,128,.10);
     }
-    body { background: #13161c; color: #d4d8e2; font-family: 'Segoe UI', system-ui, sans-serif; }
-    .navbar { background: var(--surface) !important; border-bottom: 1px solid var(--border); }
-    .navbar-brand { font-weight: 700; color: var(--brand) !important; }
-    .nav-link { color: #a0aabb !important; }
-    .nav-link:hover, .nav-link.active { color: var(--brand) !important; }
 
-    /* Stats cards */
+    * { box-sizing: border-box; }
+    body {
+      background: var(--surface);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 14px;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      background: var(--surface2) !important;
+      border-bottom: 3px solid var(--gov-orange);
+      box-shadow: var(--shadow-md);
+      padding: 0 1rem;
+    }
+    .navbar-brand {
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--gov-blue) !important;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .navbar-brand .brand-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--gov-blue), var(--gov-blue-mid));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.1rem;
+    }
+    .navbar-brand .brand-sub {
+      font-size: .65rem; font-weight: 400;
+      color: var(--text-muted); display: block; line-height: 1.1;
+    }
+    .nav-link {
+      color: var(--text-muted) !important;
+      font-size: .84rem;
+      font-weight: 500;
+      padding: .9rem .85rem !important;
+      border-bottom: 3px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--gov-blue) !important;
+      border-bottom-color: var(--gov-orange);
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      background: linear-gradient(135deg, var(--gov-blue) 0%, var(--gov-blue-mid) 100%);
+      color: #fff;
+      padding: 1.5rem 1.5rem 1rem;
+      margin-bottom: 0;
+    }
+    .page-header h4 { font-weight: 800; font-size: 1.2rem; margin-bottom: .2rem; }
+    .page-header p  { color: rgba(255,255,255,.75); font-size: .82rem; margin: 0; }
+    .page-header .btn-light {
+      font-size: .82rem; font-weight: 600;
+      background: #fff; color: var(--gov-blue);
+      border: none;
+      box-shadow: var(--shadow-sm);
+    }
+    .page-header .btn-light:hover { background: var(--gov-blue-lt); }
+
+    /* ── Stats cards ── */
     .stat-card {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 12px; padding: 1.1rem 1.4rem;
-      transition: transform .15s, border-color .15s;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.25rem;
+      transition: transform .18s, box-shadow .18s, border-color .18s;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
     }
-    .stat-card:hover { transform: translateY(-2px); border-color: var(--brand); }
-    .stat-card .stat-num { font-size: 2rem; font-weight: 700; line-height: 1.1; }
-    .stat-card .stat-label { font-size: .78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; }
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 12px 12px 0 0;
+    }
+    .stat-card.total::before   { background: var(--gov-blue); }
+    .stat-card.on-track::before{ background: var(--gov-green); }
+    .stat-card.due-soon::before{ background: var(--gov-amber); }
+    .stat-card.overdue::before { background: var(--gov-red); }
 
-    /* Table */
-    .table-card {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 12px; overflow: hidden;
+    .stat-card .stat-num {
+      font-size: 2.2rem; font-weight: 800; line-height: 1.1;
+      letter-spacing: -1px;
     }
-    .table-card .table { margin: 0; }
-    .table > :not(caption) > * > * { background: transparent; color: #d4d8e2; border-color: var(--border); }
-    .table thead { background: var(--surface); }
-    .table thead th { font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); font-weight: 600; padding: .85rem 1rem; }
-    .table tbody td { padding: .85rem 1rem; vertical-align: middle; font-size: .86rem; }
-    .table tbody tr { transition: background .12s; }
-    .table tbody tr:hover { background: rgba(244,128,26,.06); }
+    .stat-card .stat-label {
+      font-size: .72rem; text-transform: uppercase;
+      letter-spacing: .7px; font-weight: 600;
+      margin-top: .15rem;
+    }
+    .stat-card .stat-icon {
+      position: absolute; right: 1rem; top: 50%;
+      transform: translateY(-50%);
+      font-size: 2.5rem;
+      opacity: .08;
+    }
+    .stat-card.total .stat-num,   .stat-card.total .stat-icon   { color: var(--gov-blue); }
+    .stat-card.on-track .stat-num,.stat-card.on-track .stat-icon { color: var(--gov-green); }
+    .stat-card.due-soon .stat-num,.stat-card.due-soon .stat-icon { color: var(--gov-amber); }
+    .stat-card.overdue .stat-num, .stat-card.overdue .stat-icon  { color: var(--gov-red); }
+    .stat-card .stat-label { color: var(--text-muted); }
+
+    /* Progress bar */
+    .progress { height: 5px; background: var(--border); border-radius: 3px; }
+
+    /* ── Table card ── */
+    .table-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .table-card-header {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: .75rem 1rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .table-card-header .title {
+      font-weight: 700; font-size: .9rem;
+      color: var(--gov-blue);
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .table > :not(caption) > * > * {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .table thead {
+      background: var(--gov-blue-lt);
+    }
+    .table thead th {
+      font-size: .72rem; text-transform: uppercase;
+      letter-spacing: .6px; color: var(--gov-blue);
+      font-weight: 700; padding: .8rem 1rem;
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+    .table tbody td { padding: .8rem 1rem; vertical-align: middle; font-size: .85rem; }
+    .table tbody tr { transition: background .1s; cursor: pointer; }
+    .table tbody tr:hover { background: var(--gov-blue-lt); }
 
     /* Status badges */
-    .badge-on-track { background: rgba(25,135,84,.25); color: #2ecc71; border: 1px solid rgba(25,135,84,.4); }
-    .badge-due-soon  { background: rgba(253,126,20,.2); color: #fd7e14; border: 1px solid rgba(253,126,20,.4); }
-    .badge-overdue   { background: rgba(220,53,69,.2);  color: #ff6b7a; border: 1px solid rgba(220,53,69,.4); }
-    .status-badge { font-size: .73rem; font-weight: 600; padding: .28rem .65rem; border-radius: 20px; white-space: nowrap; }
+    .badge-on-track {
+      background: rgba(26,122,63,.1);
+      color: var(--gov-green);
+      border: 1px solid rgba(26,122,63,.3);
+    }
+    .badge-due-soon {
+      background: rgba(217,119,6,.1);
+      color: var(--gov-amber);
+      border: 1px solid rgba(217,119,6,.3);
+    }
+    .badge-overdue {
+      background: rgba(192,57,43,.1);
+      color: var(--gov-red);
+      border: 1px solid rgba(192,57,43,.3);
+    }
+    .status-badge {
+      font-size: .72rem; font-weight: 700;
+      padding: .28rem .7rem; border-radius: 20px;
+      white-space: nowrap; display: inline-flex;
+      align-items: center; gap: .3rem;
+    }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      display: inline-block; flex-shrink: 0;
+    }
+    .status-dot.green { background: var(--gov-green); }
+    .status-dot.amber { background: var(--gov-amber); }
+    .status-dot.red   { background: var(--gov-red);
+      box-shadow: 0 0 0 3px rgba(192,57,43,.2);
+      animation: pulse-red 1.5s infinite;
+    }
+    @keyframes pulse-red {
+      0%,100% { box-shadow: 0 0 0 2px rgba(192,57,43,.2); }
+      50%      { box-shadow: 0 0 0 5px rgba(192,57,43,.08); }
+    }
 
     /* Days chip */
-    .days-chip { font-size: .73rem; color: var(--text-muted); }
-    .days-chip.overdue { color: #ff6b7a; font-weight: 600; }
-    .days-chip.due-soon { color: #fd7e14; font-weight: 600; }
+    .days-chip { font-size: .72rem; color: var(--text-muted); }
+    .days-chip.overdue  { color: var(--gov-red); font-weight: 700; }
+    .days-chip.due-soon { color: var(--gov-amber); font-weight: 700; }
 
-    /* Action buttons */
+    /* Appeal button */
     .btn-appeal {
-      background: rgba(220,53,69,.2); border: 1px solid rgba(220,53,69,.4);
-      color: #ff6b7a; font-size: .75rem; border-radius: 6px; padding: .25rem .6rem;
+      background: rgba(192,57,43,.1);
+      border: 1px solid rgba(192,57,43,.3);
+      color: var(--gov-red);
+      font-size: .74rem; border-radius: 6px;
+      padding: .25rem .6rem;
       transition: background .15s;
+      cursor: pointer;
+      font-weight: 600;
     }
-    .btn-appeal:hover { background: rgba(220,53,69,.35); color: #fff; }
+    .btn-appeal:hover { background: rgba(192,57,43,.2); color: var(--gov-red); }
 
     /* Empty state */
-    .empty-state { text-align: center; padding: 4rem 1rem; color: var(--text-muted); }
-    .empty-state .bi { font-size: 3.5rem; display: block; margin-bottom: 1rem; opacity: .4; }
+    .empty-state {
+      text-align: center; padding: 4rem 1rem;
+      color: var(--text-muted);
+    }
+    .empty-state .bi { font-size: 3rem; display: block; margin-bottom: 1rem; opacity: .35; color: var(--gov-blue); }
+    .empty-state h5 { color: var(--text); font-weight: 700; }
 
-    /* Flash messages */
+    /* Toast container */
     .toast-container { position: fixed; top: 70px; right: 1rem; z-index: 9999; }
 
-    /* Progress bar for overdue count */
-    .progress { height: 5px; background: var(--surface); border-radius: 3px; }
-    .progress-bar-brand { background: var(--brand); }
+    /* Search + filter bar */
+    .filter-bar {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .6rem 1rem;
+      margin-bottom: 1rem;
+      display: flex; gap: .75rem; align-items: center; flex-wrap: wrap;
+      box-shadow: var(--shadow-sm);
+    }
+    .filter-bar input, .filter-bar select {
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: .38rem .7rem;
+      font-size: .82rem;
+      color: var(--text);
+      background: var(--surface);
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .filter-bar input:focus, .filter-bar select:focus {
+      border-color: var(--gov-blue-mid);
+      box-shadow: 0 0 0 3px rgba(0,80,179,.1);
+    }
+    .filter-bar input { flex: 1; min-width: 160px; }
+    .filter-bar .result-count { font-size: .78rem; color: var(--text-muted); white-space: nowrap; }
 
-    /* Animation */
-    .fade-in { animation: fadeIn .3s ease; }
-    @keyframes fadeIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+    /* Animations */
+    .fade-in { animation: fadeIn .35s ease; }
+    @keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+
+    /* Modal */
+    .modal-content { background: var(--surface2); border: 1px solid var(--border); box-shadow: var(--shadow-md); }
+    .modal-header { background: var(--gov-blue); color: #fff; border-bottom: none; border-radius: 8px 8px 0 0; }
+    .modal-header .modal-title { color: #fff; }
+    .modal-header .btn-close { filter: invert(1); }
+    .modal-footer { border-top: 1px solid var(--border); }
+    .modal-body .form-label { font-size: .78rem; color: var(--text-muted); font-weight: 600; }
+    .modal-body .form-control {
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: .83rem;
+    }
+    .modal-body .form-control:focus {
+      border-color: var(--gov-blue-mid);
+      box-shadow: 0 0 0 3px rgba(0,80,179,.1);
+    }
+    #appeal-draft-text {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 1rem; border-radius: 8px;
+      font-size: .77rem; max-height: 45vh;
+      overflow-y: auto; white-space: pre-wrap;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--surface); }
+    ::-webkit-scrollbar-thumb { background: #c0cce0; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #9aaac8; }
+
+    @media (max-width: 768px) {
+      .stat-card .stat-icon { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -83,12 +316,18 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid px-3">
-    <a class="navbar-brand" href="/"><i class="bi bi-scale me-2"></i>RTI Sahayak</a>
-    <button class="navbar-toggler border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+    <a class="navbar-brand" href="/">
+      <div class="brand-icon"><i class="bi bi-scale"></i></div>
+      <div>
+        RTI Sahayak
+        <span class="brand-sub">Right to Information Filing Assistant</span>
+      </div>
+    </a>
+    <button class="navbar-toggler border" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navMenu">
-      <ul class="navbar-nav ms-auto gap-1">
+      <ul class="navbar-nav ms-auto gap-1 align-items-center">
         <li class="nav-item"><a class="nav-link" href="/"><i class="bi bi-chat-dots me-1"></i>Chat</a></li>
         <li class="nav-item"><a class="nav-link active" href="/dashboard"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
       </ul>
@@ -100,28 +339,37 @@
 <div class="toast-container">
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% for category, message in messages %}
-    <div class="toast show align-items-center text-white border-0 bg-{{ 'danger' if category == 'error' else 'secondary' }}" role="alert">
+    <div class="toast show align-items-center border-0
+         {{ 'bg-danger text-white' if category == 'error' else 'bg-white border' }}"
+         role="alert" style="box-shadow:var(--shadow-md); border-radius:8px;">
       <div class="d-flex">
-        <div class="toast-body">{{ message }}</div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        <div class="toast-body" style="font-size:.84rem;">
+          <i class="bi {{ 'bi-exclamation-triangle-fill text-white' if category == 'error' else 'bi-check-circle-fill text-success' }} me-2"></i>
+          {{ message }}
+        </div>
+        <button type="button" class="btn-close {{ 'btn-close-white' if category == 'error' }} me-2 m-auto" data-bs-dismiss="toast"></button>
       </div>
     </div>
     {% endfor %}
   {% endwith %}
 </div>
 
-<div class="container-fluid px-3 px-lg-4 py-4">
-
-  <!-- Header row -->
-  <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
-    <div>
-      <h4 class="mb-0 fw-bold"><i class="bi bi-speedometer2 me-2 text-warning"></i>Application Dashboard</h4>
-      <small class="text-muted">Track your RTI applications and their statutory deadlines</small>
+<!-- Page header -->
+<div class="page-header">
+  <div class="container-fluid px-3 px-lg-4">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div>
+        <h4><i class="bi bi-speedometer2 me-2"></i>Application Dashboard</h4>
+        <p>Track your RTI applications, statutory deadlines, and response status</p>
+      </div>
+      <a href="/" class="btn btn-light btn-sm px-3">
+        <i class="bi bi-plus-lg me-1"></i>New Application
+      </a>
     </div>
-    <a href="/" class="btn btn-sm btn-outline-warning">
-      <i class="bi bi-plus-lg me-1"></i>New Application
-    </a>
   </div>
+</div>
+
+<div class="container-fluid px-3 px-lg-4 py-4">
 
   <!-- Stats row -->
   {% set total = applications|length %}
@@ -131,53 +379,82 @@
 
   <div class="row g-3 mb-4 fade-in">
     <div class="col-6 col-md-3">
-      <div class="stat-card">
-        <div class="stat-num text-white">{{ total }}</div>
+      <div class="stat-card total">
+        <div class="stat-num">{{ total }}</div>
         <div class="stat-label">Total Applications</div>
+        <i class="bi bi-files stat-icon"></i>
       </div>
     </div>
     <div class="col-6 col-md-3">
-      <div class="stat-card">
-        <div class="stat-num text-success">{{ on_track_count }}</div>
+      <div class="stat-card on-track">
+        <div class="stat-num">{{ on_track_count }}</div>
         <div class="stat-label">On Track</div>
+        <i class="bi bi-check-circle stat-icon"></i>
       </div>
     </div>
     <div class="col-6 col-md-3">
-      <div class="stat-card">
-        <div class="stat-num" style="color:#fd7e14;">{{ due_soon_count }}</div>
-        <div class="stat-label">Due Soon (&le;5 days)</div>
+      <div class="stat-card due-soon">
+        <div class="stat-num">{{ due_soon_count }}</div>
+        <div class="stat-label">Due Soon (≤5 days)</div>
+        <i class="bi bi-clock-history stat-icon"></i>
+        {% if total > 0 and due_soon_count > 0 %}
+        <div class="progress mt-2">
+          <div class="progress-bar" style="background:var(--gov-amber);width:{{ (due_soon_count / total * 100)|int }}%"></div>
+        </div>
+        {% endif %}
       </div>
     </div>
     <div class="col-6 col-md-3">
-      <div class="stat-card">
-        <div class="stat-num text-danger">{{ overdue_count }}</div>
+      <div class="stat-card overdue">
+        <div class="stat-num">{{ overdue_count }}</div>
         <div class="stat-label">Overdue</div>
+        <i class="bi bi-exclamation-triangle stat-icon"></i>
         {% if total > 0 %}
         <div class="progress mt-2">
-          <div class="progress-bar bg-danger" style="width: {{ (overdue_count / total * 100)|int }}%"></div>
+          <div class="progress-bar" style="background:var(--gov-red);width:{{ (overdue_count / total * 100)|int }}%"></div>
         </div>
         {% endif %}
       </div>
     </div>
   </div>
 
+  <!-- Filter bar -->
+  {% if applications %}
+  <div class="filter-bar fade-in">
+    <i class="bi bi-search text-muted"></i>
+    <input type="text" id="search-input" placeholder="Search applications…" oninput="filterTable()" />
+    <select id="status-filter" onchange="filterTable()">
+      <option value="">All Status</option>
+      <option value="on_track">On Track</option>
+      <option value="due_soon">Due Soon</option>
+      <option value="overdue">Overdue</option>
+    </select>
+    <span class="result-count" id="result-count"></span>
+    <button class="btn btn-sm btn-outline-secondary ms-auto" onclick="location.reload()" style="font-size:.78rem;">
+      <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+    </button>
+  </div>
+  {% endif %}
+
   <!-- Applications table -->
   <div class="table-card fade-in">
-    <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom border-secondary">
-      <span class="fw-semibold" style="font-size:.9rem;">
-        <i class="bi bi-table me-2 text-muted"></i>All Applications
+    <div class="table-card-header">
+      <span class="title">
+        <i class="bi bi-table"></i>All Applications
       </span>
-      <button class="btn btn-sm btn-outline-secondary" onclick="location.reload()">
-        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
-      </button>
+      {% if not applications %}
+      <a href="/" class="btn btn-sm" style="background:var(--gov-blue);color:#fff;font-size:.78rem;">
+        <i class="bi bi-plus-lg me-1"></i>File Your First RTI
+      </a>
+      {% endif %}
     </div>
 
     {% if applications %}
     <div class="table-responsive">
-      <table class="table table-hover">
+      <table class="table table-hover mb-0" id="apps-table">
         <thead>
           <tr>
-            <th>#</th>
+            <th style="width:3rem;">#</th>
             <th>Subject</th>
             <th>Department</th>
             <th>Date Filed</th>
@@ -186,47 +463,61 @@
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="table-body">
           {% for app in applications %}
-          <tr>
-            <td class="text-muted">{{ app.id }}</td>
+          <tr data-status="{{ app.status }}"
+              data-subject="{{ app.subject|lower }}"
+              data-dept="{{ app.department|lower }}"
+              onclick="rowClick(event, '/application/{{ app.id }}')">
             <td>
-              <a href="/application/{{ app.id }}" class="text-decoration-none text-light fw-semibold">
-                {{ app.subject[:60] }}{% if app.subject|length > 60 %}…{% endif %}
+              <span class="fw-bold" style="color:var(--text-muted);font-size:.78rem;">#{{ app.id }}</span>
+            </td>
+            <td>
+              <a href="/application/{{ app.id }}" class="text-decoration-none fw-semibold"
+                 style="color:var(--gov-blue);">
+                {{ app.subject[:65] }}{% if app.subject|length > 65 %}…{% endif %}
               </a>
               {% if app.ref_number %}
-                <br><small class="text-muted">Ref: {{ app.ref_number }}</small>
+                <br><small style="color:var(--text-muted);font-size:.72rem;">Ref: {{ app.ref_number }}</small>
               {% endif %}
             </td>
             <td>
-              <span class="text-muted" style="font-size:.82rem;">
+              <span style="font-size:.8rem; color:var(--text-muted);">
                 {{ app.department[:40] }}{% if app.department|length > 40 %}…{% endif %}
               </span>
             </td>
-            <td style="white-space:nowrap; font-size:.82rem;">{{ app.date_filed }}</td>
-            <td style="white-space:nowrap; font-size:.82rem;">
+            <td style="white-space:nowrap; font-size:.8rem;">{{ app.date_filed }}</td>
+            <td style="white-space:nowrap; font-size:.8rem;">
               {{ app.deadline }}
               {% if app.status == 'overdue' %}
-                <br><span class="days-chip overdue">{{ app.days_remaining|abs }} days overdue</span>
+                <br><span class="days-chip overdue"><i class="bi bi-exclamation-circle me-1"></i>{{ app.days_remaining|abs }}d overdue</span>
               {% elif app.status == 'due_soon' %}
-                <br><span class="days-chip due-soon">{{ app.days_remaining }} days left</span>
+                <br><span class="days-chip due-soon"><i class="bi bi-clock me-1"></i>{{ app.days_remaining }}d left</span>
               {% else %}
-                <br><span class="days-chip">{{ app.days_remaining }} days left</span>
+                <br><span class="days-chip">{{ app.days_remaining }}d left</span>
               {% endif %}
             </td>
             <td>
               {% if app.status == 'overdue' %}
-                <span class="status-badge badge-overdue">🔴 Overdue</span>
+                <span class="status-badge badge-overdue">
+                  <span class="status-dot red"></span>Overdue
+                </span>
               {% elif app.status == 'due_soon' %}
-                <span class="status-badge badge-due-soon">🟡 Due Soon</span>
+                <span class="status-badge badge-due-soon">
+                  <span class="status-dot amber"></span>Due Soon
+                </span>
               {% else %}
-                <span class="status-badge badge-on-track">🟢 On Track</span>
+                <span class="status-badge badge-on-track">
+                  <span class="status-dot green"></span>On Track
+                </span>
               {% endif %}
             </td>
-            <td>
-              <div class="d-flex gap-1 flex-wrap">
-                <a href="/application/{{ app.id }}" class="btn btn-sm btn-outline-secondary" title="View">
-                  <i class="bi bi-eye"></i>
+            <td onclick="event.stopPropagation()">
+              <div class="d-flex gap-1 flex-wrap align-items-center">
+                <a href="/application/{{ app.id }}"
+                   class="btn btn-sm btn-outline-primary" title="View Details"
+                   style="font-size:.75rem;">
+                  <i class="bi bi-eye me-1"></i>View
                 </a>
                 {% if app.status == 'overdue' %}
                 <button class="btn-appeal btn"
@@ -235,8 +526,10 @@
                 </button>
                 {% endif %}
                 <form method="POST" action="/application/{{ app.id }}/delete"
-                      onsubmit="return confirm('Delete this application?')" class="d-inline">
-                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                      onsubmit="return confirm('Permanently delete this application?')"
+                      class="d-inline">
+                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"
+                          style="font-size:.75rem;">
                     <i class="bi bi-trash3"></i>
                   </button>
                 </form>
@@ -250,12 +543,22 @@
     {% else %}
     <div class="empty-state">
       <i class="bi bi-inbox"></i>
-      <h5>No applications tracked yet</h5>
-      <p class="text-muted" style="font-size:.85rem;">
-        Go to the <a href="/" class="text-warning text-decoration-none">Chat</a> and ask RTI Sahayak to draft your first RTI application.
+      <h5>No Applications Tracked Yet</h5>
+      <p style="font-size:.85rem; max-width:380px; margin:.5rem auto 1.5rem;">
+        Use the Chat to draft your first RTI application. Once drafted, it will appear here for tracking.
       </p>
+      <a href="/" class="btn btn-sm px-4" style="background:var(--gov-blue);color:#fff;font-weight:600;">
+        <i class="bi bi-chat-dots me-2"></i>Go to Chat
+      </a>
     </div>
     {% endif %}
+  </div>
+
+  <!-- Disclaimer -->
+  <div class="mt-3 px-1" style="font-size:.72rem; color:var(--text-muted);">
+    <i class="bi bi-info-circle me-1"></i>
+    Deadlines are calculated under Section 7(1) of the RTI Act, 2005 (30 days from filing date).
+    Life &amp; Liberty applications follow the 48-hour statutory deadline.
   </div>
 
 </div>
@@ -263,34 +566,37 @@
 <!-- First Appeal Modal -->
 <div class="modal fade" id="appealModal" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content" style="background:#1a1d23; border:1px solid #2e3340;">
-      <div class="modal-header border-secondary">
-        <h5 class="modal-title text-danger"><i class="bi bi-megaphone-fill me-2"></i>Draft First Appeal</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-megaphone-fill me-2"></i>Draft First Appeal — Section 19</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <p class="text-muted small">The deadline for this application has passed. Fill in any missing details and click <strong>Generate Appeal</strong>.</p>
+        <div class="alert alert-warning py-2 px-3 mb-3" style="font-size:.8rem;border-radius:8px;">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          The statutory deadline has passed. You are entitled to file a First Appeal under Section 19 of the RTI Act, 2005.
+        </div>
         <div class="row g-2">
           <div class="col-md-4">
-            <label class="form-label small text-muted">Applicant Name*</label>
-            <input type="text" id="ap-name" class="form-control form-control-sm bg-dark border-secondary text-light" />
+            <label class="form-label">Applicant Name *</label>
+            <input type="text" id="ap-name" class="form-control form-control-sm" />
           </div>
           <div class="col-md-4">
-            <label class="form-label small text-muted">Applicant Contact*</label>
-            <input type="text" id="ap-contact" class="form-control form-control-sm bg-dark border-secondary text-light" />
+            <label class="form-label">Applicant Contact *</label>
+            <input type="text" id="ap-contact" class="form-control form-control-sm" />
           </div>
           <div class="col-md-4">
-            <label class="form-label small text-muted">Appellate Authority Address</label>
-            <input type="text" id="ap-faa" class="form-control form-control-sm bg-dark border-secondary text-light"
-                   placeholder="Leave blank to use placeholder" />
+            <label class="form-label">Appellate Authority Address</label>
+            <input type="text" id="ap-faa" class="form-control form-control-sm"
+                   placeholder="Officer senior in rank to PIO" />
           </div>
           <div class="col-12">
-            <label class="form-label small text-muted">Applicant Address*</label>
-            <input type="text" id="ap-addr" class="form-control form-control-sm bg-dark border-secondary text-light" />
+            <label class="form-label">Applicant Address *</label>
+            <input type="text" id="ap-addr" class="form-control form-control-sm" />
           </div>
           <div class="col-12">
-            <label class="form-label small text-muted">Reason for Appeal</label>
-            <input type="text" id="ap-reason" class="form-control form-control-sm bg-dark border-secondary text-light"
+            <label class="form-label">Reason for Appeal</label>
+            <input type="text" id="ap-reason" class="form-control form-control-sm"
                    value="No response received within the statutory 30-day period under Section 7(1) of the RTI Act, 2005" />
           </div>
         </div>
@@ -299,21 +605,24 @@
         <input type="hidden" id="ap-date" />
         <input type="hidden" id="ap-pio" />
         <div id="appeal-draft-area" class="mt-3" style="display:none;">
-          <pre id="appeal-draft-text"
-               style="background:#13161c; color:#d4d8e2; border:1px solid #2e3340;
-                      padding:1rem; border-radius:8px; font-size:.77rem;
-                      max-height:45vh; overflow-y:auto; white-space:pre-wrap;"></pre>
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <span style="font-size:.78rem; font-weight:700; color:var(--gov-blue);">
+              <i class="bi bi-file-earmark-text me-1"></i>Generated Appeal Draft
+            </span>
+          </div>
+          <pre id="appeal-draft-text"></pre>
         </div>
       </div>
-      <div class="modal-footer border-secondary">
-        <button class="btn btn-sm btn-danger" onclick="generateAppeal()">
+      <div class="modal-footer">
+        <button class="btn btn-sm" style="background:var(--gov-red);color:#fff;font-weight:600;"
+                onclick="generateAppeal()">
           <i class="bi bi-lightning-fill me-1"></i>Generate Appeal
         </button>
         <button class="btn btn-sm btn-outline-secondary" id="copy-appeal-btn"
                 style="display:none;" onclick="copyAppeal()">
           <i class="bi bi-clipboard me-1"></i>Copy
         </button>
-        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -321,6 +630,54 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+// Row click — navigate to detail page
+function rowClick(e, url) {
+  if (e.target.closest('a') || e.target.closest('button') || e.target.closest('form')) return;
+  window.location.href = url;
+}
+
+// Filter table
+function filterTable() {
+  const q     = document.getElementById('search-input').value.toLowerCase();
+  const st    = document.getElementById('status-filter').value;
+  const rows  = document.querySelectorAll('#table-body tr');
+  let visible = 0;
+
+  rows.forEach(row => {
+    const subject = row.dataset.subject || '';
+    const dept    = row.dataset.dept || '';
+    const status  = row.dataset.status || '';
+    const matchQ  = !q || subject.includes(q) || dept.includes(q);
+    const matchSt = !st || status === st;
+    const show    = matchQ && matchSt;
+    row.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+
+  const total = rows.length;
+  const cntEl = document.getElementById('result-count');
+  if (cntEl) cntEl.textContent = `Showing ${visible} of ${total}`;
+}
+
+// Init count
+document.addEventListener('DOMContentLoaded', () => {
+  filterTable();
+
+  // Animate stat numbers
+  document.querySelectorAll('.stat-num').forEach(el => {
+    const target = parseInt(el.textContent, 10);
+    if (!isNaN(target) && target > 0) {
+      let current = 0;
+      const step = Math.max(1, Math.ceil(target / 20));
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = current;
+        if (current >= target) clearInterval(timer);
+      }, 40);
+    }
+  });
+});
+
 function showAppealModal(app) {
   document.getElementById('ap-name').value    = app.applicant_name || '';
   document.getElementById('ap-addr').value    = app.applicant_address || '';
@@ -347,8 +704,9 @@ async function generateAppeal() {
     reason_for_appeal:            document.getElementById('ap-reason').value,
   };
 
-  const btn = document.querySelector('#appealModal .btn-danger');
-  btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Generating…';
+  const btn = document.querySelector('#appealModal .btn[onclick="generateAppeal()"]');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Generating…';
 
   try {
     const res = await fetch('/api/draft/appeal', {
@@ -366,7 +724,8 @@ async function generateAppeal() {
   } catch (e) {
     alert('Network error. Please try again.');
   } finally {
-    btn.disabled = false; btn.innerHTML = '<i class="bi bi-lightning-fill me-1"></i>Generate Appeal';
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bi bi-lightning-fill me-1"></i>Generate Appeal';
   }
 }
 
@@ -374,8 +733,13 @@ function copyAppeal() {
   const text = document.getElementById('appeal-draft-text').textContent;
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.getElementById('copy-appeal-btn');
+    const orig = btn.innerHTML;
     btn.innerHTML = '<i class="bi bi-check2 me-1"></i>Copied!';
-    setTimeout(() => btn.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy', 2000);
+    btn.classList.replace('btn-outline-secondary', 'btn-success');
+    setTimeout(() => {
+      btn.innerHTML = orig;
+      btn.classList.replace('btn-success', 'btn-outline-secondary');
+    }, 2000);
   });
 }
 

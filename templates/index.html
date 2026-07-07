@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,91 +8,236 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
   <style>
     :root {
-      --brand: #f4801a;
-      --brand-dim: #c15c00;
-      --surface: #1a1d23;
-      --surface2: #22262f;
-      --border: #2e3340;
-      --text-muted: #8b93a5;
-      --user-bubble: #1e3a5f;
-      --bot-bubble: #22262f;
-      --badge-green: #198754;
-      --badge-amber: #fd7e14;
-      --badge-red: #dc3545;
+      --gov-blue:     #003580;
+      --gov-blue-mid: #0050b3;
+      --gov-blue-lt:  #e8f0fe;
+      --gov-orange:   #f26522;
+      --gov-green:    #1a7a3f;
+      --gov-red:      #c0392b;
+      --gov-amber:    #d97706;
+      --surface:      #f4f6fb;
+      --surface2:     #ffffff;
+      --border:       #dde3ef;
+      --text:         #1a2340;
+      --text-muted:   #5a6a8a;
+      --user-bubble:  #003580;
+      --bot-bubble:   #f0f4ff;
+      --shadow-sm:    0 1px 4px rgba(0,53,128,.08);
+      --shadow-md:    0 4px 16px rgba(0,53,128,.10);
     }
-    body { background: #13161c; color: #d4d8e2; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+
+    body {
+      background: var(--surface);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+    }
 
     /* ── Navbar ── */
-    .navbar { background: var(--surface) !important; border-bottom: 1px solid var(--border); }
-    .navbar-brand { font-weight: 700; color: var(--brand) !important; letter-spacing: .5px; }
-    .nav-link { color: #a0aabb !important; }
-    .nav-link:hover, .nav-link.active { color: var(--brand) !important; }
+    .navbar {
+      background: var(--surface2) !important;
+      border-bottom: 3px solid var(--gov-orange);
+      box-shadow: var(--shadow-md);
+      padding: 0 1rem;
+    }
+    .navbar-brand {
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--gov-blue) !important;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .navbar-brand .brand-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--gov-blue), var(--gov-blue-mid));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.1rem;
+    }
+    .navbar-brand .brand-sub {
+      font-size: .65rem; font-weight: 400;
+      color: var(--text-muted); display: block; line-height: 1.1;
+    }
+    .nav-link {
+      color: var(--text-muted) !important;
+      font-size: .84rem;
+      font-weight: 500;
+      padding: .9rem .85rem !important;
+      border-bottom: 3px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--gov-blue) !important;
+      border-bottom-color: var(--gov-orange);
+    }
+    .navbar-toggler { border: 1px solid var(--border); }
 
     /* ── Layout ── */
-    .main-wrapper { display: flex; height: calc(100vh - 58px); overflow: hidden; }
+    .main-wrapper { display: flex; height: calc(100vh - 105px); overflow: hidden; }
 
     /* ── Sidebar ── */
     .sidebar {
-      width: 280px; min-width: 280px; background: var(--surface);
+      width: 288px; min-width: 288px;
+      background: var(--surface2);
       border-right: 1px solid var(--border);
-      padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: .5rem;
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex; flex-direction: column; gap: .4rem;
+      box-shadow: 2px 0 8px rgba(0,53,128,.04);
     }
-    .sidebar-section { border-top: 1px solid var(--border); padding-top: .75rem; margin-top: .25rem; }
-    .sidebar h6 { color: var(--text-muted); font-size: .7rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: .5rem; }
+    .sidebar h6 {
+      color: var(--gov-blue);
+      font-size: .68rem;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: .5rem;
+      padding-bottom: .3rem;
+      border-bottom: 2px solid var(--gov-blue-lt);
+    }
+    .sidebar-section {
+      border-top: 1px solid var(--border);
+      padding-top: .75rem;
+      margin-top: .4rem;
+    }
     .quick-btn {
-      width: 100%; text-align: left; background: var(--surface2);
-      border: 1px solid var(--border); border-radius: 8px;
-      color: #c8d0e0; padding: .45rem .75rem; font-size: .85rem;
-      cursor: pointer; transition: background .15s, border-color .15s;
+      width: 100%; text-align: left;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--text);
+      padding: .5rem .8rem;
+      font-size: .82rem;
+      cursor: pointer;
+      transition: background .15s, border-color .15s, box-shadow .15s;
+      display: flex; align-items: center; gap: .5rem;
     }
-    .quick-btn:hover { background: #2a2f3a; border-color: var(--brand); color: #fff; }
+    .quick-btn:hover {
+      background: var(--gov-blue-lt);
+      border-color: var(--gov-blue-mid);
+      box-shadow: var(--shadow-sm);
+      color: var(--gov-blue);
+    }
+    .quick-btn i { font-size: .95rem; flex-shrink: 0; }
 
     /* ── Deadline panel ── */
     #deadline-result { font-size: .82rem; }
-    .deadline-ok   { color: #20c997; }
-    .deadline-warn { color: var(--badge-amber); }
-    .deadline-over { color: var(--badge-red); }
+    .deadline-ok   { color: var(--gov-green); }
+    .deadline-warn { color: var(--gov-amber); }
+    .deadline-over { color: var(--gov-red); }
+    .sidebar .form-control {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: .82rem;
+    }
+    .sidebar .form-control:focus {
+      border-color: var(--gov-blue-mid);
+      box-shadow: 0 0 0 3px rgba(0,80,179,.12);
+    }
+    .sidebar .form-check-input:checked { background-color: var(--gov-blue-mid); border-color: var(--gov-blue-mid); }
 
     /* ── Chat pane ── */
     .chat-pane { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
     .chat-header {
-      background: var(--surface); border-bottom: 1px solid var(--border);
-      padding: .75rem 1.25rem; display: flex; align-items: center; gap: .75rem;
+      background: linear-gradient(135deg, var(--gov-blue) 0%, var(--gov-blue-mid) 100%);
+      padding: .8rem 1.25rem;
+      display: flex; align-items: center; gap: .8rem;
+      box-shadow: 0 2px 6px rgba(0,53,128,.15);
     }
     .chat-header .avatar {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: linear-gradient(135deg, #f4801a, #e03c1a);
-      display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+      width: 42px; height: 42px; border-radius: 50%;
+      background: rgba(255,255,255,.18);
+      border: 2px solid rgba(255,255,255,.35);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
     }
-    .chat-header h5 { margin: 0; font-size: .95rem; font-weight: 600; }
-    .chat-header small { color: var(--text-muted); font-size: .75rem; }
+    .chat-header h5 { margin: 0; font-size: .95rem; font-weight: 700; color: #fff; }
+    .chat-header small { color: rgba(255,255,255,.72); font-size: .72rem; }
+    .chat-header .btn-outline-light {
+      border-color: rgba(255,255,255,.4); color: rgba(255,255,255,.85);
+      font-size: .75rem;
+    }
+    .chat-header .btn-outline-light:hover { background: rgba(255,255,255,.15); color: #fff; }
+
+    .online-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #4ade80;
+      display: inline-block;
+      box-shadow: 0 0 0 2px rgba(74,222,128,.3);
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { box-shadow: 0 0 0 2px rgba(74,222,128,.3); }
+      50%      { box-shadow: 0 0 0 5px rgba(74,222,128,.1); }
+    }
 
     #chat-messages {
       flex: 1; overflow-y: auto; padding: 1.25rem;
-      display: flex; flex-direction: column; gap: .9rem;
+      display: flex; flex-direction: column; gap: 1rem;
       scroll-behavior: smooth;
+      background: var(--surface);
     }
     .msg-row { display: flex; align-items: flex-end; gap: .6rem; animation: fadeUp .25s ease; }
     .msg-row.user { flex-direction: row-reverse; }
     @keyframes fadeUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
 
     .bubble {
-      max-width: 72%; padding: .65rem 1rem; border-radius: 14px;
-      font-size: .875rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word;
+      max-width: 72%;
+      padding: .75rem 1rem;
+      border-radius: 14px;
+      font-size: .875rem;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
-    .bubble.bot  { background: var(--bot-bubble); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
-    .bubble.user { background: var(--user-bubble); border: 1px solid #1e4a7a; border-bottom-right-radius: 4px; }
+    .bubble.bot {
+      background: var(--bot-bubble);
+      border: 1px solid #ccd8f5;
+      border-bottom-left-radius: 4px;
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+    }
+    .bubble.user {
+      background: var(--user-bubble);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+      box-shadow: var(--shadow-sm);
+    }
 
     .msg-avatar {
       width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; font-size: .85rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; box-shadow: var(--shadow-sm);
     }
-    .msg-avatar.bot  { background: linear-gradient(135deg,#f4801a,#e03c1a); }
-    .msg-avatar.user { background: #1e3a5f; border: 1px solid #1e4a7a; }
+    .msg-avatar.bot  {
+      background: linear-gradient(135deg, var(--gov-blue), var(--gov-blue-mid));
+      color: #fff;
+    }
+    .msg-avatar.user {
+      background: #e8f0fe;
+      border: 1px solid #ccd8f5;
+      color: var(--gov-blue);
+    }
+
+    .msg-time {
+      font-size: .68rem;
+      color: var(--text-muted);
+      margin-top: .25rem;
+      text-align: right;
+    }
+    .msg-row.user .msg-time { text-align: right; }
+    .msg-row:not(.user) .msg-time { text-align: left; padding-left: 38px; }
 
     /* typing indicator */
     .typing-dots span {
-      display: inline-block; width: 7px; height: 7px; background: var(--text-muted);
+      display: inline-block; width: 7px; height: 7px;
+      background: var(--gov-blue-mid);
       border-radius: 50%; margin: 0 2px;
       animation: dot-bounce 1.2s infinite ease-in-out;
     }
@@ -105,40 +250,122 @@
 
     /* draft modal pre */
     #draft-content {
-      background: #13161c; color: #d4d8e2; border: 1px solid var(--border);
-      padding: 1rem; border-radius: 8px; font-size: .78rem;
-      max-height: 60vh; overflow-y: auto; white-space: pre-wrap;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: .78rem;
+      max-height: 60vh;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      font-family: 'Courier New', Courier, monospace;
     }
 
     /* Input bar */
     .chat-input-bar {
-      background: var(--surface); border-top: 1px solid var(--border);
-      padding: .75rem 1.25rem; display: flex; gap: .6rem; align-items: center;
+      background: var(--surface2);
+      border-top: 1px solid var(--border);
+      padding: .75rem 1.25rem;
+      display: flex; gap: .6rem; align-items: flex-end;
+      box-shadow: 0 -2px 8px rgba(0,53,128,.06);
     }
     #chat-input {
-      flex: 1; background: var(--surface2); border: 1px solid var(--border);
-      color: #d4d8e2; border-radius: 22px; padding: .5rem 1rem;
-      font-size: .875rem; resize: none; outline: none;
-      transition: border-color .15s;
+      flex: 1;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      color: var(--text);
+      border-radius: 22px;
+      padding: .55rem 1.1rem;
+      font-size: .875rem;
+      resize: none;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+      max-height: 140px;
     }
-    #chat-input:focus { border-color: var(--brand); }
+    #chat-input:focus {
+      border-color: var(--gov-blue-mid);
+      box-shadow: 0 0 0 3px rgba(0,80,179,.1);
+    }
+    #chat-input::placeholder { color: #9aaac8; }
     #send-btn {
-      background: var(--brand); border: none; border-radius: 50%;
-      width: 40px; height: 40px; color: #fff; font-size: 1.1rem;
+      background: var(--gov-blue);
+      border: none;
+      border-radius: 50%;
+      width: 42px; height: 42px;
+      color: #fff;
+      font-size: 1rem;
       display: flex; align-items: center; justify-content: center;
-      transition: background .15s, transform .1s; flex-shrink: 0;
+      transition: background .15s, transform .1s, box-shadow .15s;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,53,128,.25);
+      cursor: pointer;
     }
-    #send-btn:hover { background: var(--brand-dim); transform: scale(1.05); }
+    #send-btn:hover { background: var(--gov-blue-mid); transform: scale(1.06); box-shadow: 0 4px 12px rgba(0,53,128,.35); }
+    #send-btn:disabled { background: #b0bdd8; cursor: not-allowed; transform: none; box-shadow: none; }
 
-    /* ── Error banner ── */
+    /* Error banner */
     #error-banner { display:none; }
+    #error-banner.show { display: block; }
 
-    /* ── Responsive ── */
+    /* Modal light theme */
+    .modal-content {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+    }
+    .modal-header {
+      background: var(--gov-blue);
+      color: #fff;
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+    }
+    .modal-header .modal-title { color: #fff; }
+    .modal-header .btn-close { filter: invert(1); }
+    .modal-footer { border-top: 1px solid var(--border); }
+
+    /* About section */
+    .about-card {
+      background: var(--gov-blue-lt);
+      border: 1px solid #c0d0f0;
+      border-radius: 8px;
+      padding: .75rem;
+      font-size: .75rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* Sidebar nav btn */
+    .sidebar-nav-btn {
+      width: 100%;
+      background: var(--gov-blue);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: .5rem .8rem;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+      transition: background .15s, box-shadow .15s;
+      box-shadow: var(--shadow-sm);
+      text-decoration: none;
+    }
+    .sidebar-nav-btn:hover { background: var(--gov-blue-mid); color: #fff; box-shadow: var(--shadow-md); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--surface); }
+    ::-webkit-scrollbar-thumb { background: #c0cce0; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #9aaac8; }
+
+    /* Responsive */
     @media (max-width: 768px) {
       .sidebar { display: none; }
+      .bubble { max-width: 88%; }
     }
     @media (max-width: 576px) {
-      .bubble { max-width: 90%; }
+      .bubble { max-width: 94%; }
     }
   </style>
 </head>
@@ -147,12 +374,18 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid px-3">
-    <a class="navbar-brand" href="/"><i class="bi bi-scale me-2"></i>RTI Sahayak</a>
-    <button class="navbar-toggler border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+    <a class="navbar-brand" href="/">
+      <div class="brand-icon"><i class="bi bi-scale"></i></div>
+      <div>
+        RTI Sahayak
+        <span class="brand-sub">Right to Information Filing Assistant</span>
+      </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navMenu">
-      <ul class="navbar-nav ms-auto gap-1">
+      <ul class="navbar-nav ms-auto gap-1 align-items-center">
         <li class="nav-item"><a class="nav-link active" href="/"><i class="bi bi-chat-dots me-1"></i>Chat</a></li>
         <li class="nav-item"><a class="nav-link" href="/dashboard"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
       </ul>
@@ -164,7 +397,7 @@
 <div id="error-banner" class="alert alert-danger alert-dismissible m-2 mb-0 py-2 px-3 rounded-3" role="alert">
   <i class="bi bi-exclamation-triangle-fill me-2"></i>
   <span id="error-text"></span>
-  <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('error-banner').style.display='none'"></button>
+  <button type="button" class="btn-close" onclick="document.getElementById('error-banner').classList.remove('show')"></button>
 </div>
 
 <div class="main-wrapper">
@@ -174,22 +407,25 @@
 
     <!-- Quick Actions -->
     <div>
-      <h6>Quick Actions</h6>
+      <h6><i class="bi bi-lightning me-1"></i>Quick Actions</h6>
       <div class="d-flex flex-column gap-2">
         <button class="quick-btn" onclick="quickPrompt('I want to file an RTI application. My pension has been pending for 6 months. Please help me draft one.')">
-          <i class="bi bi-file-earmark-text me-2 text-warning"></i>Draft RTI Application
+          <i class="bi bi-file-earmark-text text-primary"></i>Draft RTI Application
         </button>
         <button class="quick-btn" onclick="quickPrompt('I did not get a response to my RTI in 30 days. Please help me draft a First Appeal under Section 19.')">
-          <i class="bi bi-megaphone me-2 text-danger"></i>Draft First Appeal
+          <i class="bi bi-megaphone" style="color:var(--gov-red)"></i>Draft First Appeal
         </button>
         <button class="quick-btn" onclick="quickPrompt('What is the RTI Act 2005? How can it help me as a citizen?')">
-          <i class="bi bi-info-circle me-2 text-info"></i>What is RTI?
+          <i class="bi bi-info-circle" style="color:var(--gov-blue-mid)"></i>What is RTI?
         </button>
         <button class="quick-btn" onclick="quickPrompt('What are the exemptions under Section 8 of the RTI Act?')">
-          <i class="bi bi-shield-exclamation me-2 text-secondary"></i>RTI Exemptions
+          <i class="bi bi-shield-exclamation text-secondary"></i>RTI Exemptions
         </button>
         <button class="quick-btn" onclick="quickPrompt('What is the fee for filing an RTI application?')">
-          <i class="bi bi-currency-rupee me-2 text-success"></i>Fee Information
+          <i class="bi bi-currency-rupee" style="color:var(--gov-green)"></i>Fee Information
+        </button>
+        <button class="quick-btn" onclick="quickPrompt('What are my rights if my RTI application is rejected?')">
+          <i class="bi bi-question-circle text-warning"></i>Rejection Rights
         </button>
       </div>
     </div>
@@ -198,30 +434,30 @@
     <div class="sidebar-section">
       <h6><i class="bi bi-calendar-check me-1"></i>Deadline Tracker</h6>
       <div class="mb-2">
-        <label class="form-label small text-muted mb-1">Filing Date</label>
-        <input type="date" id="dl-date" class="form-control form-control-sm bg-dark border-secondary text-light"
-               value="{{ today_date }}" />
+        <label class="form-label small mb-1" style="color:var(--text-muted); font-size:.76rem;">Filing Date</label>
+        <input type="date" id="dl-date" class="form-control form-control-sm" value="{{ today_date }}" />
       </div>
       <div class="form-check form-switch mb-2">
         <input class="form-check-input" type="checkbox" id="dl-lol" />
-        <label class="form-check-label small text-muted" for="dl-lol">Life / Liberty (48 hrs)</label>
+        <label class="form-check-label small" for="dl-lol" style="font-size:.78rem; color:var(--text-muted);">Life / Liberty (48 hrs)</label>
       </div>
       <button class="quick-btn" onclick="calcDeadline()">
-        <i class="bi bi-calculator me-2"></i>Calculate Deadline
+        <i class="bi bi-calculator text-primary"></i>Calculate Deadline
       </button>
       <div id="deadline-result" class="mt-2 ps-1"></div>
     </div>
 
     <!-- About -->
     <div class="sidebar-section mt-auto">
-      <h6>About</h6>
-      <p class="text-muted" style="font-size:.75rem; line-height:1.5;">
-        RTI Sahayak helps you draft RTI applications, track deadlines, and file appeals — grounded in the RTI Act, 2005.<br><br>
-        <span class="text-warning"><i class="bi bi-exclamation-triangle me-1"></i></span>
-        Does not submit on your behalf. Verify addresses before filing.
-      </p>
-      <a href="/dashboard" class="quick-btn d-block text-center text-decoration-none mt-1">
-        <i class="bi bi-speedometer2 me-2"></i>View Dashboard
+      <h6><i class="bi bi-info-square me-1"></i>About</h6>
+      <div class="about-card mb-2">
+        <strong style="color:var(--gov-blue);">RTI Sahayak</strong> helps you draft RTI applications,
+        track deadlines, and file appeals — grounded in the <strong>RTI Act, 2005</strong>.<br><br>
+        <i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>
+        Does <strong>not</strong> submit applications on your behalf. Verify all addresses before filing.
+      </div>
+      <a href="/dashboard" class="sidebar-nav-btn">
+        <i class="bi bi-speedometer2"></i>View My Dashboard
       </a>
     </div>
 
@@ -234,12 +470,12 @@
     <div class="chat-header">
       <div class="avatar">⚖️</div>
       <div>
-        <h5>RTI Sahayak</h5>
-        <small>Powered by IBM watsonx.ai · Granite · RTI Act, 2005</small>
+        <h5>RTI Sahayak &nbsp;<span class="online-dot"></span></h5>
+        <small>Powered by IBM watsonx.ai · Granite Model · RTI Act, 2005</small>
       </div>
       <div class="ms-auto">
-        <button class="btn btn-sm btn-outline-secondary" onclick="resetChat()" title="New conversation">
-          <i class="bi bi-arrow-counterclockwise"></i>
+        <button class="btn btn-sm btn-outline-light" onclick="resetChat()" title="New conversation">
+          <i class="bi bi-arrow-counterclockwise me-1"></i>New Chat
         </button>
       </div>
     </div>
@@ -248,8 +484,9 @@
     <div id="chat-messages">
       <!-- Welcome message -->
       <div class="msg-row">
-        <div class="msg-avatar bot">⚖️</div>
-        <div class="bubble bot">Namaste! 🙏 I am <strong>RTI Sahayak</strong>, your Right to Information assistant powered by IBM Granite AI.
+        <div class="msg-avatar bot"><i class="bi bi-scale"></i></div>
+        <div>
+          <div class="bubble bot">Namaste! 🙏 I am <strong>RTI Sahayak</strong>, your Right to Information assistant powered by IBM Granite AI.
 
 I can help you:
 📝 <strong>Draft an RTI application</strong> — just describe your issue
@@ -261,14 +498,17 @@ I can help you:
 Example: <em>"My pension application has been pending for 6 months."</em>
 
 ⚠️ <small>I do not submit applications on your behalf. Verify all details before filing.</small></div>
+          <div class="msg-time" id="welcome-time"></div>
+        </div>
       </div>
     </div>
 
     <!-- Input bar -->
     <div class="chat-input-bar">
-      <textarea id="chat-input" rows="1" placeholder="Describe your issue or ask a question about RTI…"
-                onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-      <button id="send-btn" onclick="sendMessage()" title="Send">
+      <textarea id="chat-input" rows="1"
+        placeholder="Describe your issue or ask a question about RTI…"
+        onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button id="send-btn" onclick="sendMessage()" title="Send message">
         <i class="bi bi-send-fill"></i>
       </button>
     </div>
@@ -279,19 +519,19 @@ Example: <em>"My pension application has been pending for 6 months."</em>
 <!-- Draft Modal -->
 <div class="modal fade" id="draftModal" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content bg-dark border border-secondary">
-      <div class="modal-header border-secondary">
-        <h5 class="modal-title"><i class="bi bi-file-earmark-text me-2 text-warning"></i><span id="draft-modal-title">Draft</span></h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-file-earmark-text me-2"></i><span id="draft-modal-title">Draft</span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         <pre id="draft-content"></pre>
       </div>
-      <div class="modal-footer border-secondary">
+      <div class="modal-footer">
         <button class="btn btn-sm btn-outline-secondary" onclick="copyDraft()">
           <i class="bi bi-clipboard me-1"></i>Copy
         </button>
-        <button class="btn btn-sm btn-outline-warning" onclick="printDraft()">
+        <button class="btn btn-sm btn-outline-primary" onclick="printDraft()">
           <i class="bi bi-printer me-1"></i>Print
         </button>
         <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -304,9 +544,15 @@ Example: <em>"My pension application has been pending for 6 months."</em>
 <script>
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
+function nowTime() {
+  return new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+}
+
+document.getElementById('welcome-time').textContent = nowTime();
+
 function showError(msg) {
   document.getElementById('error-text').textContent = msg;
-  document.getElementById('error-banner').style.display = 'block';
+  document.getElementById('error-banner').classList.add('show');
 }
 
 function autoResize(el) {
@@ -332,21 +578,39 @@ function appendMessage(role, text) {
 
   const avatar = document.createElement('div');
   avatar.className = `msg-avatar ${role}`;
-  avatar.textContent = role === 'user' ? '👤' : '⚖️';
+  if (role === 'bot') {
+    avatar.innerHTML = '<i class="bi bi-scale"></i>';
+  } else {
+    avatar.innerHTML = '<i class="bi bi-person-fill"></i>';
+  }
+
+  const msgWrap = document.createElement('div');
 
   const bubble = document.createElement('div');
   bubble.className = `bubble ${role}`;
   bubble.textContent = text;
 
-  if (role === 'user') { row.appendChild(bubble); row.appendChild(avatar); }
-  else                 { row.appendChild(avatar); row.appendChild(bubble); }
+  const timeEl = document.createElement('div');
+  timeEl.className = 'msg-time';
+  timeEl.textContent = nowTime();
+
+  msgWrap.appendChild(bubble);
+  msgWrap.appendChild(timeEl);
+
+  if (role === 'user') {
+    row.appendChild(msgWrap);
+    row.appendChild(avatar);
+  } else {
+    row.appendChild(avatar);
+    row.appendChild(msgWrap);
+  }
 
   container.appendChild(row);
   scrollToBottom();
   return bubble;
 }
 
-// ── Styled error card for credential / config errors ─────────────────────────
+// ── Styled error card ─────────────────────────────────────────────────────────
 
 function appendConfigError(text) {
   const container = document.getElementById('chat-messages');
@@ -355,36 +619,46 @@ function appendConfigError(text) {
 
   const avatar = document.createElement('div');
   avatar.className = 'msg-avatar bot';
-  avatar.textContent = '⚖️';
+  avatar.innerHTML = '<i class="bi bi-scale"></i>';
+
+  const msgWrap = document.createElement('div');
 
   const card = document.createElement('div');
   card.style.cssText = [
     'max-width:72%',
-    'background:#2a1215',
-    'border:1px solid #6b1a22',
+    'background:#fff5f5',
+    'border:1.5px solid #f8b4b4',
     'border-radius:12px',
     'padding:.75rem 1rem',
     'font-size:.83rem',
     'line-height:1.7',
     'white-space:pre-wrap',
-    'word-break:break-word'
+    'word-break:break-word',
+    'color:#7a1515'
   ].join(';');
 
   const lines = text.split('\n');
   const heading = document.createElement('div');
-  heading.style.cssText = 'font-weight:700;color:#ff6b7a;margin-bottom:.5rem;font-size:.88rem;';
+  heading.style.cssText = 'font-weight:700;color:#c0392b;margin-bottom:.5rem;font-size:.88rem;';
   heading.textContent = lines[0];
   card.appendChild(heading);
 
   if (lines.length > 1) {
     const body = document.createElement('div');
-    body.style.color = '#e8c0c5';
     body.textContent = lines.slice(1).join('\n').trim();
     card.appendChild(body);
   }
 
+  const timeEl = document.createElement('div');
+  timeEl.className = 'msg-time';
+  timeEl.style.paddingLeft = '38px';
+  timeEl.textContent = nowTime();
+
+  msgWrap.appendChild(card);
+  msgWrap.appendChild(timeEl);
+
   row.appendChild(avatar);
-  row.appendChild(card);
+  row.appendChild(msgWrap);
   container.appendChild(row);
   scrollToBottom();
 }
@@ -395,10 +669,12 @@ function appendTyping() {
   row.className = 'msg-row'; row.id = 'typing-indicator';
 
   const avatar = document.createElement('div');
-  avatar.className = 'msg-avatar bot'; avatar.textContent = '⚖️';
+  avatar.className = 'msg-avatar bot';
+  avatar.innerHTML = '<i class="bi bi-scale"></i>';
 
   const bubble = document.createElement('div');
   bubble.className = 'bubble bot';
+  bubble.style.padding = '.65rem 1rem';
   bubble.innerHTML = '<span class="typing-dots"><span></span><span></span><span></span></span>';
 
   row.appendChild(avatar); row.appendChild(bubble);
@@ -418,7 +694,9 @@ async function sendMessage() {
   const text = input.value.trim();
   if (!text) return;
 
+  const sendBtn = document.getElementById('send-btn');
   input.value = ''; input.style.height = 'auto';
+  sendBtn.disabled = true;
   appendMessage('user', text);
   appendTyping();
 
@@ -431,29 +709,28 @@ async function sendMessage() {
     removeTyping();
 
     if (data.error) {
-      if (data.config_required) {
-        appendConfigError(data.error);
-      } else {
-        appendConfigError(data.error);
-      }
+      appendConfigError(data.error);
     } else {
       appendMessage('bot', data.reply);
     }
   } catch (err) {
     removeTyping();
     appendMessage('bot', '⚠️ Network error. Please check that the server is running.');
+  } finally {
+    sendBtn.disabled = false;
   }
 }
 
 function quickPrompt(text) {
   document.getElementById('chat-input').value = text;
+  autoResize(document.getElementById('chat-input'));
   sendMessage();
 }
 
 async function resetChat() {
   await fetch('/api/chat/reset', { method: 'POST' });
   document.getElementById('chat-messages').innerHTML = '';
-  appendMessage('bot', 'Chat cleared. How can I help you today?');
+  appendMessage('bot', 'Chat cleared. Namaste! How can I help you with your RTI today?');
 }
 
 // ── Deadline calculator ───────────────────────────────────────────────────────
@@ -463,7 +740,12 @@ async function calcDeadline() {
   const lol     = document.getElementById('dl-lol').checked;
   const result  = document.getElementById('deadline-result');
 
-  if (!dateVal) { result.innerHTML = '<span class="text-warning">Please select a filing date.</span>'; return; }
+  if (!dateVal) {
+    result.innerHTML = '<span class="text-warning"><i class="bi bi-exclamation-triangle me-1"></i>Please select a filing date.</span>';
+    return;
+  }
+
+  result.innerHTML = '<span class="text-muted"><i class="bi bi-hourglass-split me-1"></i>Calculating…</span>';
 
   try {
     const res = await fetch('/api/deadline', {
@@ -479,23 +761,24 @@ async function calcDeadline() {
     let cls, icon, msg;
 
     if (data.status === 'overdue') {
-      cls = 'deadline-over'; icon = '🔴';
-      msg = `Overdue by <strong>${Math.abs(rem)} day(s)</strong>.<br>File a First Appeal!`;
+      cls = 'deadline-over'; icon = 'bi-exclamation-circle-fill';
+      msg = `Overdue by <strong>${Math.abs(rem)} day(s)</strong>.<br><span style="font-size:.75rem;">File a First Appeal immediately!</span>`;
     } else if (data.status === 'due_soon') {
-      cls = 'deadline-warn'; icon = '🟡';
+      cls = 'deadline-warn'; icon = 'bi-clock-history';
       msg = `<strong>${rem} day(s)</strong> remaining.`;
     } else {
-      cls = 'deadline-ok'; icon = '🟢';
+      cls = 'deadline-ok'; icon = 'bi-check-circle-fill';
       msg = `<strong>${rem} day(s)</strong> remaining.`;
     }
 
     result.innerHTML = `
-      <div class="${cls}">
-        ${icon} <strong>${lol ? '48-hr' : '30-day'} Deadline:</strong> ${dl}<br>
-        ${msg}
+      <div class="${cls}" style="background:var(--surface);border:1px solid currentColor;border-radius:6px;padding:.5rem .6rem;margin-top:.5rem;">
+        <i class="bi ${icon} me-1"></i>
+        <strong>${lol ? '48-hr' : '30-day'} Deadline:</strong> ${dl}<br>
+        <span style="padding-left:1.2rem;">${msg}</span>
       </div>`;
   } catch {
-    result.innerHTML = '<span class="text-danger">Error calculating deadline.</span>';
+    result.innerHTML = '<span class="text-danger"><i class="bi bi-wifi-off me-1"></i>Error calculating deadline.</span>';
   }
 }
 
@@ -511,15 +794,20 @@ function copyDraft() {
   const text = document.getElementById('draft-content').textContent;
   navigator.clipboard.writeText(text).then(() => {
     const btn = event.target.closest('button');
+    const orig = btn.innerHTML;
     btn.innerHTML = '<i class="bi bi-check2 me-1"></i>Copied!';
-    setTimeout(() => btn.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy', 2000);
+    btn.classList.replace('btn-outline-secondary', 'btn-success');
+    setTimeout(() => {
+      btn.innerHTML = orig;
+      btn.classList.replace('btn-success', 'btn-outline-secondary');
+    }, 2000);
   });
 }
 
 function printDraft() {
   const text = document.getElementById('draft-content').textContent;
   const win = window.open('', '_blank');
-  win.document.write('<pre style="font-family:monospace;padding:20px;">' + text + '</pre>');
+  win.document.write('<pre style="font-family:monospace;padding:20px;font-size:13px;">' + text + '</pre>');
   win.print();
 }
 
